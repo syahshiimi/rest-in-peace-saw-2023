@@ -1,14 +1,28 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import QuestionButton from "../components/questionButton";
-import GenerateImage from "../src/generateImage";
+import Image from 'next/image'
 
 
-interface QuestionOneProps {
-  children?: ReactNode;
-};
+const QuestionOne = () => {
 
+  const [data, setData] = useState<any>()
 
-const QuestionOne = ({ children }: QuestionOneProps) => {
+  const payload = {
+    "prompt": 'faded and grainy wide angle shot of a vintage 80s interior, futuristic, soft and dreamy lighting, cyberpunk 2077 aesthetic'
+  }
+
+  function GenerateImage() {
+    const options = {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify(payload)
+    };
+
+    fetch('http://localhost:7860/sdapi/v1/txt2img', options)
+      .then(response => response.json())
+      .then(response => setData(response))
+      .then(response => console.log(response))
+  }
 
   return (
     <>
@@ -24,6 +38,11 @@ const QuestionOne = ({ children }: QuestionOneProps) => {
           <QuestionButton postData={GenerateImage}>I visit it frequently.</QuestionButton>
           <QuestionButton>I visit it occassionally.</QuestionButton>
           <QuestionButton>I visit it rarely.</QuestionButton>
+        </div>
+        <div className="w-[250px]">
+          {
+            (!data) ? null || undefined : <Image src={`data:image/png;base64, ${data?.images}`} alt="SD image" width={512} height={512} />
+          }
         </div>
       </h2 >
     </>
