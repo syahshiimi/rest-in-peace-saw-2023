@@ -4,163 +4,13 @@ import Image from "next/image"
 import useSWR from "swr"
 import randomIntFromInterval from "../src/minmaxgenerate"
 
+import QuestionOne from "../components/QuestionOne"
+import QuestionTwo from "../components/QuestionTwo"
+import QuestionThree from "../components/QuestionThree"
+import QuestionFour from "../components/QuestionFour"
+
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
-
-interface QuestionProps {
-    isClick: "one" | "two" | "three" | "four"
-    setIsClick: Dispatch<SetStateAction<string>>
-    basePrompt: string
-    setBasePrompt: Dispatch<SetStateAction<string>>
-}
-
-const QuestionOne = ({
-    isClick,
-    setIsClick,
-    setBasePrompt,
-    basePrompt,
-}: QuestionProps) => {
-    const QuestionOnePrompts = [
-        "high key, contrasty lighting",
-        "low key, soft contrast and depressing lighting",
-        "high key, contrasty lighting with popping energetic colors",
-        "low key, high contrast black and white daido moriyama style lighting",
-    ]
-
-    return (
-        <>
-            <div className="pb-8 text-7xl font-bold">Question #1:</div>
-            <h2 className="text-4xl font-semibold">
-                We’d like to know more about you before we begin.
-                <br />
-                <br />
-                <i className="text-3xl tracking-tight">
-                    How often do you visit Peace Center?
-                </i>
-                <div className="grid grid-cols-2 gap-4 pt-8">
-                    <QuestionButton
-                        setIsClick={setIsClick}
-                        isClick={isClick}
-                        basePrompt={QuestionOnePrompts?.[0]}
-                        setBasePrompt={setBasePrompt}
-                    >
-                        I visit it frequently.
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I visit it occassionally.
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I visit if I am nearby.
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I visit it rarely.
-                    </QuestionButton>
-                </div>
-            </h2>
-        </>
-    )
-}
-
-const QuestionTwo = ({ isClick, setIsClick }: QuestionProps) => {
-    return (
-        <>
-            <div className="pb-8 text-7xl font-bold">Question #2</div>
-            <h2 className="text-4xl font-semibold">
-                Peace Center is an important place for some of us.
-                <br />
-                We'd like to know more about how you feel.
-                <br />
-                <br />
-                <i className="text-3xl tracking-tight">
-                    What is your fondest memory of Peace Center?
-                </i>
-                <div className="grid grid-cols-2 gap-4 pt-8">
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I often come to eat and buy things.
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I work in this building.
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I often come here to spend time with my family
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I dont have much memories of Peace Center
-                    </QuestionButton>
-                </div>
-            </h2>
-        </>
-    )
-}
-
-const QuestionThree = ({ isClick, setIsClick }: QuestionProps) => {
-    return (
-        <>
-            <div className="pb-8 text-7xl font-bold">Question #3</div>
-            <h2 className="text-4xl font-semibold">
-                Peace Center will be en-bloc later this year in Aug 2023. For
-                some it is a moment of joy and for some, a painful reminder that
-                things can change too fast.
-                <br />
-                <br />
-                <i className="text-3xl tracking-tight">
-                    How do you feel about this situation?
-                </i>
-                <div className="grid grid-cols-2 gap-4 pt-8">
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I am excited for what's to come next!
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I hope the tenants will find a space afterwards. It is a
-                        sad moment but life goes on.
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I have a lot of memories that I cherish here. I am sad
-                        it will disappear.
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I am not sure how to feel.
-                    </QuestionButton>
-                </div>
-            </h2>
-        </>
-    )
-}
-
-const QuestionFour = ({ isClick, setIsClick }: QuestionProps) => {
-    return (
-        <>
-            <div className="pb-8 text-7xl font-bold">Question #4</div>
-            <h2 className="text-4xl font-semibold">
-                Peace Center will soon make way for a new development and be in
-                line with the new presence of its vicinity. .
-                <br />
-                <br />
-                <i className="text-3xl tracking-tight">
-                    If you had a chance to build something, what would you
-                    transform Peace Center to?
-                </i>
-                <div className="grid grid-cols-2 gap-4 pt-8">
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I hope the future development will be more contemporary
-                        and help to reliven the perception of the area!
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I hope the overall vibe and energy can be kept. Peace
-                        Center has its charm and vibe.
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I like Peace Center the way it is.
-                    </QuestionButton>
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
-                        I hope Peace Center can be revitalized into something
-                        more energetic and relevant.
-                    </QuestionButton>
-                </div>
-            </h2>
-        </>
-    )
-}
 
 const rndInt = randomIntFromInterval(1, 10)
 const fetcher = (url: RequestInfo | URL) => fetch(url).then((res) => res.json())
@@ -281,6 +131,7 @@ export default function Home() {
     return (
         <div className="container mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center">
             {setView()}
+            <div className="pt-8">{basePrompt}</div>
         </div>
     )
 }
