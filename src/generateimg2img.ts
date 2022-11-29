@@ -1,16 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
-
-interface GenerateImage2ImageProps {
-    setData: Dispatch<SetStateAction<any>>
-    payload: {
-        init_iamges: Array<string> | undefined
-        include_init_images: boolean | undefined
-        denoising_strength: number | undefined
-        steps: number | undefined
-        cfg_scale: number | undefined
-        prompt: string | undefined
-    }
-}
+import { type GenerateImage2ImageProps } from "../types/GenerateImage2ImageProps"
 
 export default function GenerateImage2Image({
     payload,
