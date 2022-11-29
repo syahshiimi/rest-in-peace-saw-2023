@@ -10,9 +10,23 @@ const getBase64StringFromDataURL = (dataURL: any) =>
 interface QuestionProps {
     isClick: "one" | "two" | "three" | "four"
     setIsClick: Dispatch<SetStateAction<string>>
+    basePrompt: string
+    setBasePrompt: Dispatch<SetStateAction<string>>
 }
 
-const QuestionOne = ({ isClick, setIsClick }: QuestionProps) => {
+const QuestionOne = ({
+    isClick,
+    setIsClick,
+    setBasePrompt,
+    basePrompt,
+}: QuestionProps) => {
+    const QuestionOnePrompts = [
+        "high key, contrasty lighting",
+        "low key, soft contrast and depressing lighting",
+        "high key, contrasty lighting with popping energetic colors",
+        "low key, high contrast black and white daido moriyama style lighting",
+    ]
+
     return (
         <>
             <div className="pb-8 text-7xl font-bold">Question #1:</div>
@@ -24,7 +38,12 @@ const QuestionOne = ({ isClick, setIsClick }: QuestionProps) => {
                     How often do you visit Peace Center?
                 </i>
                 <div className="grid grid-cols-2 gap-4 pt-8">
-                    <QuestionButton setIsClick={setIsClick} isClick={isClick}>
+                    <QuestionButton
+                        setIsClick={setIsClick}
+                        isClick={isClick}
+                        basePrompt={QuestionOnePrompts?.[0]}
+                        setBasePrompt={setBasePrompt}
+                    >
                         I visit it frequently.
                     </QuestionButton>
                     <QuestionButton setIsClick={setIsClick} isClick={isClick}>
@@ -151,6 +170,19 @@ export default function Home() {
     const [img, setimg] = useState<string>("/images/peace-center-2.jpg")
     const [isClick, setIsClick] = useState<string>("one")
 
+    // Prompt Generation
+    const [basePromptOne, setBasePromptOne] = useState<string>(
+        "faded and grainy wide angle shot of a vintage 80's interior"
+    )
+    const [basePromptTwo, setBasePromptTwo] = useState<string>("futuristic")
+    const [basePromptThree, setBasePromptThree] = useState<string>(
+        "soft and dreamy lighting"
+    )
+    const [basePromptFour, setBasePromptFour] =
+        useState<string>("wong-kar wai vibe")
+
+    const basePrompt = `${basePromptOne}, ${basePromptTwo}, ${basePromptThree}, ${basePromptFour}, `
+
     // fetch images from backend
     const { data, error } = useSWR("api/getimageblob", fetcher, {
         revalidateOnFocus: false,
@@ -206,15 +238,45 @@ export default function Home() {
 
     const setView = () => {
         if (isClick == "one") {
-            return <QuestionOne isClick={"one"} setIsClick={setIsClick} />
+            return (
+                <QuestionOne
+                    isClick={"one"}
+                    setIsClick={setIsClick}
+                    basePrompt={basePromptOne}
+                    setBasePrompt={setBasePromptOne}
+                />
+            )
         } else if (isClick == "two") {
-            return <QuestionTwo isClick={"two"} setIsClick={setIsClick} />
+            return (
+                <QuestionTwo
+                    isClick={"two"}
+                    setIsClick={setIsClick}
+                    basePrompt={basePromptTwo}
+                    setBasePrompt={setBasePromptTwo}
+                />
+            )
         } else if (isClick == "three") {
-            return <QuestionThree isClick={"three"} setIsClick={setIsClick} />
+            return (
+                <QuestionThree
+                    isClick={"three"}
+                    setIsClick={setIsClick}
+                    basePrompt={basePromptThree}
+                    setBasePrompt={setBasePromptThree}
+                />
+            )
         } else if (isClick === "four") {
-            return <QuestionFour isClick={"four"} setIsClick={setIsClick} />
+            return (
+                <QuestionFour
+                    isClick={"four"}
+                    setIsClick={setIsClick}
+                    basePrompt={basePromptFour}
+                    setBasePrompt={setBasePromptFour}
+                />
+            )
         }
     }
+
+    console.log(basePrompt)
 
     return (
         <div className="container mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center">
