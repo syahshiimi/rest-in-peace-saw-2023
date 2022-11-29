@@ -1,5 +1,4 @@
-import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react"
-import QuestionButton from "../components/questionButton"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import useSWR from "swr"
 import randomIntFromInterval from "../src/minmaxgenerate"
@@ -8,6 +7,7 @@ import QuestionOne from "../components/QuestionOne"
 import QuestionTwo from "../components/QuestionTwo"
 import QuestionThree from "../components/QuestionThree"
 import QuestionFour from "../components/QuestionFour"
+import { GenerateImage2ImageProps } from "../types/GenerateImage2ImageProps"
 
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
@@ -32,6 +32,16 @@ export default function Home() {
         useState<string>("wong-kar wai vibe")
 
     const basePrompt = `${basePromptOne}, ${basePromptTwo}, ${basePromptThree}, ${basePromptFour}, `
+
+    // Payload generation
+    const payload = {
+        init_images: [`data:image/png;base64,${imgbase64}`],
+        include_init_images: true,
+        denoising_strength: 0.47,
+        steps: 20,
+        cfg_scale: 9,
+        prompt: { basePrompt },
+    }
 
     // fetch images from backend
     const { data, error } = useSWR("api/getimageblob", fetcher, {
@@ -60,15 +70,6 @@ export default function Home() {
     }, [img, imgbase64, data, error])
 
     // const [payloadData, setData] = useState<any>()
-
-    // const payload = {
-    //     init_images: [`data:image/png;base64,${imgbase64}`],
-    //     include_init_images: true,
-    //     denoising_strength: 0.47,
-    //     steps: 20,
-    //     cfg_scale: 9,
-    //     prompt: "faded and grainy wide angle shot of a vintage 80s interior, futuristic, soft and dreamy lighting, cyberpunk 2077 aesthetic",
-    // }
 
     // function GenerateImage() {
     //     const options = {
