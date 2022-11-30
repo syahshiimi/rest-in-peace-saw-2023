@@ -6,6 +6,7 @@ interface QuestionButtonProps {
     basePrompt?: string | undefined
     setIsClick?: Dispatch<SetStateAction<string>>
     setBasePrompt?: Dispatch<SetStateAction<any>>
+    PostRequest?: () => void
 }
 
 const QuestionButton = ({
@@ -14,32 +15,30 @@ const QuestionButton = ({
     setIsClick,
     basePrompt,
     setBasePrompt,
+    PostRequest,
 }: QuestionButtonProps) => {
     const setBool = () => {
-        if (setIsClick != undefined) {
-            if (isClick == "one") {
-                setIsClick("two")
-            } else if (isClick == "two") {
-                setIsClick("three")
-            } else if (isClick === "three") {
-                setIsClick("four")
-            } else if (isClick === "four") {
-                setIsClick("generate")
-            } else if (isClick === "generate") {
-                setIsClick("showImage")
-            }
+        if (isClick && setIsClick != undefined) {
+            setIsClick(isClick)
         }
     }
-
     const setPrompt = () => {
         if (setBasePrompt != undefined) {
             setBasePrompt(basePrompt)
         }
     }
 
+    const sendPostReq = () => {
+        if (PostRequest != undefined) {
+            PostRequest()
+        } else {
+            null
+        }
+    }
     const onClick = () => {
         setBool()
         setPrompt()
+        sendPostReq()
     }
 
     return (
