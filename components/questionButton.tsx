@@ -6,7 +6,7 @@ interface QuestionButtonProps {
     basePrompt?: string | undefined
     setIsClick?: Dispatch<SetStateAction<string>>
     setBasePrompt?: Dispatch<SetStateAction<any>>
-    PostRequest?: () => void
+    PostRequest?: (payload: any, setStableImage: any) => void
 }
 
 const QuestionButton = ({
