@@ -34,8 +34,6 @@ export default function Home() {
 
     const basePrompt = `${basePromptOne}, ${basePromptTwo}, ${basePromptThree}, ${basePromptFour}, `
 
-    // fetch images from backend
-
     const fetcher = (url: RequestInfo | URL) =>
         fetch(url).then((res) => res.json())
     const { data, error } = useSWR("api/getimageblob", fetcher, {})
@@ -56,7 +54,6 @@ export default function Home() {
         }
     }, [img, imgbase64, data, error])
 
-    // Payload generation
     const payload = {
         init_images: [`data:image/png;base64,${imgbase64}`],
         include_init_images: true,
