@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import useSWR from "swr"
-import randomIntFromInterval from "../src/minmaxgenerate"
+import randomIntFromInterval from "../src/MinMaxGenerator"
 
 import QuestionOne from "../components/QuestionOne"
 import QuestionTwo from "../components/QuestionTwo"
@@ -9,7 +9,7 @@ import QuestionThree from "../components/QuestionThree"
 import QuestionFour from "../components/QuestionFour"
 import QuestionButton from "../components/questionButton"
 
-import GenerateImage2Image from "../src/generateimg2img"
+import GenerateImage2Image, { payloadProps } from "../src/GenerateImage2Image"
 
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
@@ -54,7 +54,7 @@ export default function Home() {
         }
     }, [img, imgbase64, data, error])
 
-    const payload = {
+    const payload: payloadProps = {
         init_images: [`data:image/png;base64,${imgbase64}`],
         include_init_images: true,
         denoising_strength: 0.47,
@@ -63,7 +63,7 @@ export default function Home() {
         prompt: basePrompt,
     }
 
-    const postData = () => {
+    const PostRequest = () => {
         GenerateImage2Image(payload, setStableImage)
     }
 
@@ -109,7 +109,9 @@ export default function Home() {
                 <QuestionButton
                     setIsClick={setIsClick}
                     isClick={"showImage"}
-                    PostRequest={postData}
+                    PostRequest={() =>
+                        GenerateImage2Image(payload, setStableImage)
+                    }
                 >
                     Generate!
                 </QuestionButton>
