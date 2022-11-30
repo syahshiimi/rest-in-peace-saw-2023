@@ -7,7 +7,7 @@ import QuestionOne from "../components/QuestionOne"
 import QuestionTwo from "../components/QuestionTwo"
 import QuestionThree from "../components/QuestionThree"
 import QuestionFour from "../components/QuestionFour"
-import { GenerateImage2ImageProps } from "../types/GenerateImage2ImageProps"
+import QuestionGenerate from "../components/QuestionGenerate"
 
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
@@ -17,8 +17,9 @@ const fetcher = (url: RequestInfo | URL) => fetch(url).then((res) => res.json())
 
 export default function Home() {
     const [imgbase64, setImgBase64] = useState<string>()
-    const [img, setimg] = useState<string>("/images/peace-center-2.jpg")
+    const [img, setimg] = useState<string>()
     const [isClick, setIsClick] = useState<string>("one")
+    const [StableImage, setStableImage] = useState<string>()
 
     // Prompt Generation
     const [basePromptOne, setBasePromptOne] = useState<string>(
@@ -33,24 +34,15 @@ export default function Home() {
 
     const basePrompt = `${basePromptOne}, ${basePromptTwo}, ${basePromptThree}, ${basePromptFour}, `
 
-    // Payload generation
-    const payload = {
-        init_images: [`data:image/png;base64,${imgbase64}`],
-        include_init_images: true,
-        denoising_strength: 0.47,
-        steps: 20,
-        cfg_scale: 9,
-        prompt: { basePrompt },
-    }
-
     // fetch images from backend
+
     const { data, error } = useSWR("api/getimageblob", fetcher, {
-        revalidateOnFocus: false,
-        revalidateOnMount: false,
-        revalidateOnReconnect: false,
-        refreshWhenOffline: false,
-        refreshWhenHidden: false,
-        refreshInterval: 0,
+        // revalidateOnFocus: false,
+        // // revalidateOnMount: false,
+        // revalidateOnReconnect: false,
+        // refreshWhenOffline: false,
+        // refreshWhenHidden: false,
+        // refreshInterval: 0,
     })
 
     useEffect(() => {
@@ -69,23 +61,31 @@ export default function Home() {
         }
     }, [img, imgbase64, data, error])
 
-    // const [payloadData, setData] = useState<any>()
+    // Payload generation
+    const payload = {
+        init_images: [`data:image/png;base64,${imgbase64}`],
+        include_init_images: true,
+        denoising_strength: 0.47,
+        steps: 20,
+        cfg_scale: 9,
+        prompt: basePrompt,
+    }
 
-    // function GenerateImage() {
-    //     const options = {
-    //         method: "POST",
-    //         headers: {
-    //             "content-type": "application/json",
-    //             accept: "application/json",
-    //         },
-    //         body: JSON.stringify(payload),
-    //     }
+    function GenerateImage() {
+        const options = {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+                accept: "application/json",
+            },
+            body: JSON.stringify(payload),
+        }
 
-    //     fetch("http://192.168.1.140:7860/sdapi/v1/img2img", options)
-    //         .then((response) => response.json())
-    //         .then((response) => setData(response))
-    //         .then((response) => console.log(response))
-    // }
+        fetch("http://127.0.0.1:7860/sdapi/v1/img2img", options)
+            .then((response) => response.json())
+            .then((response) => setStableImage(response))
+            .then((response) => console.log(response))
+    }
 
     const setView = () => {
         if (isClick == "one") {
@@ -124,15 +124,32 @@ export default function Home() {
                     setBasePrompt={setBasePromptFour}
                 />
             )
+        } else if (isClick === "generate") {
+            return (
+                <QuestionGenerate isClick="generate" setIsClick={setIsClick} />
+            )
+        } else if (isClick === "showImage") {
+            return <div>IMAGE HERE</div>
         }
     }
-
-    console.log(basePrompt)
 
     return (
         <div className="container mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center">
             {setView()}
             <div className="pt-8">{basePrompt}</div>
+            <button className="bg-red-500" onClick={() => GenerateImage()}>
+                Generate
+            </button>
+            {!StableImage ? (
+                null || undefined
+            ) : (
+                <Image
+                    src={`data:image/png;base64, ${StableImage?.images}`}
+                    alt="SD image"
+                    width={512}
+                    height={512}
+                />
+            )}
         </div>
     )
 }
