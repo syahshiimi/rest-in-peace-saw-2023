@@ -4,9 +4,9 @@ interface QuestionButtonProps {
     children?: ReactNode
     isClick?: string | undefined
     basePrompt?: string | undefined
-    setIsClick?: Dispatch<SetStateAction<string>>
-    setBasePrompt?: Dispatch<SetStateAction<any>>
-    PostRequest?: (payload: any, setStableImage: any) => void
+    setIsClick?: Dispatch<SetStateAction<string>> | undefined
+    setBasePrompt?: Dispatch<SetStateAction<string>> | undefined
+    PostRequest?: () => void
 }
 
 const QuestionButton = ({
@@ -23,7 +23,7 @@ const QuestionButton = ({
         }
     }
     const setPrompt = () => {
-        if (setBasePrompt != undefined) {
+        if (setBasePrompt && basePrompt != undefined) {
             setBasePrompt(basePrompt)
         }
     }
