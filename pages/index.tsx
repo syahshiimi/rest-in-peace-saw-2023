@@ -9,11 +9,12 @@ import QuestionThree from "../components/QuestionThree"
 import QuestionFour from "../components/QuestionFour"
 import QuestionButton from "../components/questionButton"
 
+import GenerateImage2Image from "../src/generateimg2img"
+
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
 
-const rndInt = randomIntFromInterval(1, 10)
-const fetcher = (url: RequestInfo | URL) => fetch(url).then((res) => res.json())
+const randomInt = randomIntFromInterval(0, 12)
 
 export default function Home() {
     const [imgbase64, setImgBase64] = useState<string>()
@@ -21,7 +22,6 @@ export default function Home() {
     const [isClick, setIsClick] = useState<string>("one")
     const [StableImage, setStableImage] = useState<any>() // fix this from any to correct type
 
-    // Prompt Generation
     const [basePromptOne, setBasePromptOne] = useState<string>(
         "faded and grainy wide angle shot of a vintage 80's interior"
     )
@@ -36,17 +36,12 @@ export default function Home() {
 
     // fetch images from backend
 
-    const { data, error } = useSWR("api/getimageblob", fetcher, {
-        // revalidateOnFocus: false,
-        // // revalidateOnMount: false,
-        // revalidateOnReconnect: false,
-        // refreshWhenOffline: false,
-        // refreshWhenHidden: false,
-        // refreshInterval: 0,
-    })
+    const fetcher = (url: RequestInfo | URL) =>
+        fetch(url).then((res) => res.json())
+    const { data, error } = useSWR("api/getimageblob", fetcher, {})
 
     useEffect(() => {
-        setimg(data?.[rndInt])
+        setimg(data?.[randomInt])
         if (img != undefined) {
             fetch(img)
                 .then((res) => res.blob())
@@ -71,20 +66,8 @@ export default function Home() {
         prompt: basePrompt,
     }
 
-    function GenerateImage() {
-        const options = {
-            method: "POST",
-            headers: {
-                "content-type": "application/json",
-                accept: "application/json",
-            },
-            body: JSON.stringify(payload),
-        }
-
-        fetch("http://127.0.0.1:7860/sdapi/v1/img2img", options)
-            .then((response) => response.json())
-            .then((response) => setStableImage(response))
-            .then((response) => console.log(response))
+    const postData = () => {
+        GenerateImage2Image(payload, setStableImage)
     }
 
     const setView = () => {
@@ -129,7 +112,7 @@ export default function Home() {
                 <QuestionButton
                     setIsClick={setIsClick}
                     isClick={"showImage"}
-                    PostRequest={GenerateImage}
+                    PostRequest={postData}
                 >
                     Generate!
                 </QuestionButton>
@@ -138,7 +121,7 @@ export default function Home() {
             return (
                 <div>
                     {!StableImage ? (
-                        <div>... loading</div>
+                        <div>...loading</div>
                     ) : (
                         <Image
                             src={`data:image/png;base64, ${StableImage?.images}`}
@@ -152,14 +135,9 @@ export default function Home() {
         }
     }
 
-    console.log(StableImage)
-
     return (
         <div className="container mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center">
             {setView()}
-            {/* <button className="bg-red-500" onClick={() => GenerateImage()}>
-                Generate
-            </button> */}
             <div className="pt-8">{basePrompt}</div>
         </div>
     )
