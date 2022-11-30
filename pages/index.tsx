@@ -7,7 +7,7 @@ import QuestionOne from "../components/QuestionOne"
 import QuestionTwo from "../components/QuestionTwo"
 import QuestionThree from "../components/QuestionThree"
 import QuestionFour from "../components/QuestionFour"
-import QuestionGenerate from "../components/QuestionGenerate"
+import QuestionButton from "../components/questionButton"
 
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
@@ -19,7 +19,7 @@ export default function Home() {
     const [imgbase64, setImgBase64] = useState<string>()
     const [img, setimg] = useState<string>()
     const [isClick, setIsClick] = useState<string>("one")
-    const [StableImage, setStableImage] = useState<string>()
+    const [StableImage, setStableImage] = useState<any>() // fix this from any to correct type
 
     // Prompt Generation
     const [basePromptOne, setBasePromptOne] = useState<string>(
@@ -91,7 +91,7 @@ export default function Home() {
         if (isClick == "one") {
             return (
                 <QuestionOne
-                    isClick={"one"}
+                    isClick={"two"}
                     setIsClick={setIsClick}
                     basePrompt={basePromptOne}
                     setBasePrompt={setBasePromptOne}
@@ -100,7 +100,7 @@ export default function Home() {
         } else if (isClick == "two") {
             return (
                 <QuestionTwo
-                    isClick={"two"}
+                    isClick={"three"}
                     setIsClick={setIsClick}
                     basePrompt={basePromptTwo}
                     setBasePrompt={setBasePromptTwo}
@@ -109,7 +109,7 @@ export default function Home() {
         } else if (isClick == "three") {
             return (
                 <QuestionThree
-                    isClick={"three"}
+                    isClick={"four"}
                     setIsClick={setIsClick}
                     basePrompt={basePromptThree}
                     setBasePrompt={setBasePromptThree}
@@ -118,7 +118,7 @@ export default function Home() {
         } else if (isClick === "four") {
             return (
                 <QuestionFour
-                    isClick={"four"}
+                    isClick={"generate"}
                     setIsClick={setIsClick}
                     basePrompt={basePromptFour}
                     setBasePrompt={setBasePromptFour}
@@ -126,30 +126,41 @@ export default function Home() {
             )
         } else if (isClick === "generate") {
             return (
-                <QuestionGenerate isClick="generate" setIsClick={setIsClick} />
+                <QuestionButton
+                    setIsClick={setIsClick}
+                    isClick={"showImage"}
+                    PostRequest={GenerateImage}
+                >
+                    Generate!
+                </QuestionButton>
             )
         } else if (isClick === "showImage") {
-            return <div>IMAGE HERE</div>
+            return (
+                <div>
+                    {!StableImage ? (
+                        <div>... loading</div>
+                    ) : (
+                        <Image
+                            src={`data:image/png;base64, ${StableImage?.images}`}
+                            alt="SD image"
+                            width={512}
+                            height={512}
+                        />
+                    )}
+                </div>
+            )
         }
     }
+
+    console.log(StableImage)
 
     return (
         <div className="container mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center">
             {setView()}
-            <div className="pt-8">{basePrompt}</div>
-            <button className="bg-red-500" onClick={() => GenerateImage()}>
+            {/* <button className="bg-red-500" onClick={() => GenerateImage()}>
                 Generate
-            </button>
-            {!StableImage ? (
-                null || undefined
-            ) : (
-                <Image
-                    src={`data:image/png;base64, ${StableImage?.images}`}
-                    alt="SD image"
-                    width={512}
-                    height={512}
-                />
-            )}
+            </button> */}
+            <div className="pt-8">{basePrompt}</div>
         </div>
     )
 }
