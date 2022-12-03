@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import useSWR from "swr"
 import randomIntFromInterval from "../src/MinMaxGenerator"
@@ -38,7 +38,88 @@ export default function Home() {
         fetch(url).then((res) => res.json())
     const { data, error } = useSWR("api/getimageblob", fetcher, {})
 
+    let width = 320;    // We will scale the photo width to this
+    let height = 0;     // This will be computed based on the input stream
+
+    let streaming = false;
+
+    let video: any = null;
+    let canvas: any = null;
+    let photo: any = null;
+    let startbutton: any = null;
+
+    function clearphoto() {
+        const context = canvas.getContext("2d");
+        context.fillStyle = "#AAA";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        const data = canvas.toDataURL("image/png");
+        photo.setAttribute("src", data);
+    }
+    function takepicture() {
+        const context = canvas.getContext("2d");
+        if (width && height) {
+            canvas.width = width;
+            canvas.height = height;
+            context.drawImage(video, 0, 0, width, height);
+
+            const data = canvas.toDataURL("image/png");
+            photo.setAttribute("src", data);
+        } else {
+            clearphoto();
+        }
+    }
+
+    function startup() {
+        video = document.getElementById('video');
+        canvas = document.getElementById('canvas');
+        photo = document.getElementById('photo');
+        startbutton = document.getElementById('startbutton');
+        navigator.mediaDevices
+            .getUserMedia({ video: true, audio: false })
+            .then((stream) => {
+                video.srcObject = stream;
+                //video.play();
+            })
+            .catch((err) => {
+                console.error(`An error occurred: ${err}`);
+            });
+        video.addEventListener(
+            "canplay",
+            (ev: any) => {
+                if (!streaming) {
+                    height = (video.videoHeight / video.videoWidth) * width;
+
+                    video.setAttribute("width", width);
+                    video.setAttribute("height", height);
+                    canvas.setAttribute("width", width);
+                    canvas.setAttribute("height", height);
+                    streaming = true;
+                }
+            },
+            false
+        );
+        // startbutton.addEventListener(
+        //     "click",
+        //     (ev) => {
+        //         takepicture();
+        //         // ev.preventDefault();
+        //     },
+        //     false
+        // );
+
+        // clearphoto();
+    }
+
+    const getImageClick = (e: React.FormEvent) => {
+        // startbutton.addEventListener("click", (ev) => {
+        takepicture();
+        e.preventDefault();
+        // }, true)
+    }
+
     useEffect(() => {
+        startup()
         setimg(data?.[randomInt])
         if (img != undefined) {
             fetch(img)
@@ -61,10 +142,6 @@ export default function Home() {
         steps: 20,
         cfg_scale: 9,
         prompt: basePrompt,
-    }
-
-    const PostRequest = () => {
-        GenerateImage2Image(payload, setStableImage)
     }
 
     const setView = () => {
@@ -138,6 +215,17 @@ export default function Home() {
         <div className="container mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center">
             {setView()}
             <div className="pt-8">{basePrompt}</div>
+            <div className="flex flex-row">            <div id="camera">
+                <video id="video" autoPlay={true} >Video stream not available.</video>
+                <button id="startbutton" onClick={getImageClick}>Take photo</button>
+            </div>
+                <canvas id="canvas" className="hidden invisible"> </canvas>
+                <div id="output">
+                    <img id="photo" alt="The screen capture will appear in this box." />
+                </div>
+            </div>
+
+
         </div>
     )
 }
