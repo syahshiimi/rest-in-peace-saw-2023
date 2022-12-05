@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { NextPage } from "next"
 import Webcam from "react-webcam"
 import * as bodySegmentation from "@tensorflow-models/body-segmentation"
@@ -8,8 +8,6 @@ const Camera: NextPage = () => {
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
-    const imageRef = useRef<any>(null)
-    const [frameData, setFrameData] = useState<any>()
 
     // load bodySegmentation model
     const loadModel = async () => {
