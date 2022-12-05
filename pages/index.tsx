@@ -2,14 +2,13 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import useSWR from "swr"
 import randomIntFromInterval from "../src/MinMaxGenerator"
+import GenerateImage2Image, { payloadProps } from "../src/GenerateImage2Image"
 
 import QuestionOne from "../components/QuestionOne"
 import QuestionTwo from "../components/QuestionTwo"
 import QuestionThree from "../components/QuestionThree"
 import QuestionFour from "../components/QuestionFour"
 import QuestionButton from "../components/questionButton"
-
-import GenerateImage2Image, { payloadProps } from "../src/GenerateImage2Image"
 
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
