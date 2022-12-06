@@ -23,7 +23,12 @@ export default function GenerateImage2Image(
         body: JSON.stringify(payload),
     }
 
-    fetch("http://127.0.0.1:7860/sdapi/v1/img2img", options)
+    fetch("http://192.168.1.140:7860/sdapi/v1/img2img", options)
         .then((response) => response.json())
         .then((response) => setStableImage(response))
+        // if at serial.sg use this
+//  fetch("http://192.168.1.140:7860/sdapi/v1/img2img", options)
+//         .then((response) => response.json())
+//         .then((response) => setStableImage(response))
+
 }
