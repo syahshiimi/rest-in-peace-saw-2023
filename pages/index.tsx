@@ -13,7 +13,7 @@ import QuestionButton from "../components/questionButton"
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
 
-const randomInt = randomIntFromInterval(0, 12)
+const randomInt = randomIntFromInterval(0, 13)
 
 export default function Home() {
     const [imgbase64, setImgBase64] = useState<string>()
@@ -38,7 +38,7 @@ export default function Home() {
     const payload: payloadProps = {
         init_images: [`data:image/png;base64,${imgbase64}`],
         include_init_images: true,
-        denoising_strength: 0.47,
+        denoising_strength: 0.55,
         steps: 20,
         cfg_scale: 9,
         prompt: basePrompt,
