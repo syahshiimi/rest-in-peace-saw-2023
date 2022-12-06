@@ -9,7 +9,7 @@ interface CameraProps {
 }
 
 const Camera = ({
-    getGenerateImage = "/images/peace-center-2.jpg",
+    getGenerateImage = "/images/test_image.png",
 }: CameraProps) => {
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
@@ -123,13 +123,13 @@ const Camera = ({
                     ref={chromaRef}
                     className={` absolute left-[60%] z-20 basis-1/4 bg-transparent bg-cover `}
                 />
-                <div className="absolute left-[60%] z-10 h-[480px] w-[640px] basis-1/4">
+                <div className="absolute left-[60%] z-10 max-h-[480px] max-w-[640px] basis-1/4">
                     <Image
                         alt="generated image"
                         src={getGenerateImage}
-                        className="bg-cover"
-                        width={640}
-                        height={480}
+                        className="bg-contain"
+                        width={512}
+                        height={512}
                     />
                 </div>
             </div>
