@@ -1,8 +1,7 @@
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import Webcam from "react-webcam"
 import * as bodySegmentation from "@tensorflow-models/body-segmentation"
 import "@tensorflow/tfjs-backend-webgl"
-import { NextPage } from "next"
 
 interface CameraProps {
     getGenerateImage: string | undefined
@@ -127,7 +126,7 @@ const Camera = ({
                 />
                 <canvas
                     ref={chromaRef}
-                    className={`h-[480px] w-[640px] basis-1/3  bg-[url('/images/peace-center-2.jpg')] bg-cover`}
+                    className={`h-[480px] w-[640px] basis-1/3 bg-cover `}
                 />
             </div>
 
