@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react"
 import Webcam from "react-webcam"
 import * as bodySegmentation from "@tensorflow-models/body-segmentation"
 import "@tensorflow/tfjs-backend-webgl"
+import Image from "next/image"
 
 interface CameraProps {
     getGenerateImage: string | undefined
@@ -113,23 +114,25 @@ const Camera = ({
     }
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center">
-            <div className="max-w-screen flex flex-row overflow-hidden">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-yellow-500">
+            <div className=" flex flex-row ">
                 {" "}
-                <Webcam
-                    ref={webcamRef}
-                    className="h-[480px] w-[640px] basis-1/3"
-                />
-                <canvas
-                    ref={canvasRef}
-                    className="h-[480px] w-[640px] basis-1/3"
-                />
+                <Webcam ref={webcamRef} className=" basis-1/4" />
+                <canvas ref={canvasRef} className=" basis-1/4" />
                 <canvas
                     ref={chromaRef}
-                    className={`h-[480px] w-[640px] basis-1/3 bg-cover `}
+                    className={` absolute left-[60%] z-20 basis-1/4 bg-transparent bg-cover `}
                 />
+                <div className="absolute left-[60%] z-10 h-[480px] w-[640px] basis-1/4">
+                    <Image
+                        alt="generated image"
+                        src={getGenerateImage}
+                        className="bg-cover"
+                        width={640}
+                        height={480}
+                    />
+                </div>
             </div>
-
             <button className="bg-red-500" onClick={loadModel}>
                 Get Model
             </button>
