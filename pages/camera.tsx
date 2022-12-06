@@ -1,10 +1,16 @@
 import { useRef } from "react"
-import { NextPage } from "next"
 import Webcam from "react-webcam"
 import * as bodySegmentation from "@tensorflow-models/body-segmentation"
 import "@tensorflow/tfjs-backend-webgl"
+import { NextPage } from "next"
 
-const Camera: NextPage = () => {
+interface CameraProps {
+    getGenerateImage: string | undefined
+}
+
+const Camera = ({
+    getGenerateImage = "/images/peace-center-2.jpg",
+}: CameraProps) => {
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
@@ -60,10 +66,16 @@ const Camera: NextPage = () => {
 
             // Make segmentations
             const person = await segmenter.segmentPeople(video)
-            const coloredPartImage = await bodySegmentation.toBinaryMask(person)
+            const coloredPartImage = await bodySegmentation.toBinaryMask(
+                person,
+                undefined,
+                undefined,
+                undefined,
+                0.63
+            )
             const opacity = 1
             const flipHorizontal = false
-            const maskBlurAmount = 2
+            const maskBlurAmount = 0.25
             await bodySegmentation.drawMask(
                 canvas,
                 video,
@@ -77,15 +89,16 @@ const Camera: NextPage = () => {
             const context = canvas.getContext("2d")
             const context2 = canvas2.getContext("2d")
 
+            // Get frame data from canvas context
             const frame = context.getImageData(
                 0,
                 0,
                 canvas2.width,
                 canvas2.height
             )
-
             const data = frame.data
 
+            // Remove Black Pixels
             for (let i = 0; i < data.length; i += 4) {
                 const red = data[i + 0]
                 const green = data[i + 1]
@@ -95,6 +108,7 @@ const Camera: NextPage = () => {
                 }
             }
 
+            // Draw pixels from canvas to canvas2
             context2.putImageData(frame, 0, 0)
         }
     }
@@ -113,7 +127,7 @@ const Camera: NextPage = () => {
                 />
                 <canvas
                     ref={chromaRef}
-                    className="h-[480px] w-[640px] basis-1/3 bg-[url('../public/images/peace-center-28.jpg')] bg-cover"
+                    className={`h-[480px] w-[640px] basis-1/3  bg-[url('/images/peace-center-2.jpg')] bg-cover`}
                 />
             </div>
 
