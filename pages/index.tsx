@@ -41,7 +41,7 @@ export default function Home() {
         include_init_images: true,
         denoising_strength: 0.55,
         steps: 20,
-        cfg_scale: 9,
+        cfg_scale: 26,
         prompt: basePrompt,
     }
 
