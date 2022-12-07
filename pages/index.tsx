@@ -9,6 +9,7 @@ import QuestionTwo from "../components/QuestionTwo"
 import QuestionThree from "../components/QuestionThree"
 import QuestionFour from "../components/QuestionFour"
 import QuestionButton from "../components/questionButton"
+import Camera from "./camera"
 
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
@@ -120,11 +121,9 @@ export default function Home() {
                     {!StableImage ? (
                         <div>...loading</div>
                     ) : (
-                        <Image
-                            src={`data:image/png;base64, ${StableImage?.images}`}
-                            alt="SD image"
-                            width={512}
-                            height={512}
+                        <Camera
+                            getGenerateImage={`data:image/png;base64, ${StableImage?.images}`}
+                            startWebcam={true}
                         />
                     )}
                 </div>
@@ -133,9 +132,11 @@ export default function Home() {
     }
 
     return (
-        <div className="container mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center">
-            {setView()}
-            <div className="pt-8">{basePrompt}</div>
+        <div className="bg-slate-800">
+            <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center bg-slate-800 ">
+                {setView()}
+                <div className="pt-8">{basePrompt}</div>
+            </div>
         </div>
     )
 }

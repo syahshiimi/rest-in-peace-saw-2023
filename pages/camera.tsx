@@ -6,14 +6,21 @@ import Image from "next/image"
 
 interface CameraProps {
     getGenerateImage: string | undefined
+    startWebcam: boolean | string | undefined
 }
 
 const Camera = ({
-    getGenerateImage = "/images/test_image.png",
+    getGenerateImage = "/images/peace-center-2.jpg",
+    startWebcam = false,
 }: CameraProps) => {
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
+    const videoConstraits = {
+        width: { min: 640 },
+        height: { min: 480 },
+        aspectRation: 1.777777777777778,
+    }
 
     // load bodySegmentation model
     const loadModel = async () => {
@@ -35,7 +42,7 @@ const Camera = ({
 
         setInterval(() => {
             chromaKey(segmenter)
-        }, 1000 / 60)
+        }, 1000 / 74)
     }
 
     const chromaKey = async (segmenter: any) => {
@@ -114,26 +121,32 @@ const Camera = ({
     }
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-yellow-500">
-            <div className=" flex flex-row ">
-                {" "}
-                <Webcam ref={webcamRef} className=" basis-1/4" />
-                <canvas ref={canvasRef} className=" basis-1/4" />
+        <div className="flex min-h-screen flex-col items-center justify-center">
+            {" "}
+            <div className="flex flex-col">
+                <Webcam
+                    ref={webcamRef}
+                    className=" invisible h-0 w-0"
+                    videoConstraints={videoConstraits}
+                />
+                <canvas ref={canvasRef} className=" invisible  h-0 w-0" />
                 <canvas
                     ref={chromaRef}
-                    className={` absolute left-[60%] z-20 basis-1/4 bg-transparent bg-cover `}
+                    className="absolute left-[50%] top-[50%] z-20 -translate-y-[50%]  -translate-x-[50%]  bg-transparent"
                 />
-                <div className="absolute left-[60%] z-10 max-h-[480px] max-w-[640px] basis-1/4">
+                <div className="absolute left-[50%] top-[50%] z-10 h-[480px]  w-[640px] -translate-y-[50%] -translate-x-[50%]">
                     <Image
                         alt="generated image"
                         src={getGenerateImage}
-                        className="bg-contain"
-                        width={512}
-                        height={512}
+                        style={{ objectFit: "cover" }}
+                        fill={true}
                     />
                 </div>
             </div>
-            <button className="bg-red-500" onClick={loadModel}>
+            <button
+                className="absolute top-[5%] bg-red-500"
+                onClick={loadModel}
+            >
                 Get Model
             </button>
         </div>
