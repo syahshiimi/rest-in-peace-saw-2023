@@ -19,7 +19,8 @@ const QuestionTwo = ({
             <h2 className="text-4xl font-semibold">
                 Peace Center is an important place for some of us.
                 <br />
-                We`&apos`d like to know more about how you feel.
+                <br />
+                We&apos;d like to know more about how you feel.
                 <br />
                 <br />
                 <i className="text-3xl tracking-tight">

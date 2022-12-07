@@ -32,7 +32,7 @@ const QuestionThree = ({
                         basePrompt={QuestionThreePrompts?.[0]}
                         setBasePrompt={setBasePrompt}
                     >
-                        I am excited for what`&apos`s to come next!
+                        I am excited for what&apos;s to come next!
                     </QuestionButton>
                     <QuestionButton
                         setIsClick={setIsClick}

@@ -19,7 +19,7 @@ const QuestionFour = ({
             <div className="pb-8 text-7xl font-bold">Question #4</div>
             <h2 className="text-4xl font-semibold">
                 Peace Center will soon make way for a new development and be in
-                line with the new presence of its vicinity. .
+                line with the new presence of its vicinity.
                 <br />
                 <br />
                 <i className="text-3xl tracking-tight">
