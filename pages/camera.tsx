@@ -18,8 +18,8 @@ const Camera = ({
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
     const videoConstraints = {
-        width: { min: 640 },
-        height: { min: 480 },
+        width: { min: 1280 },
+        height: { min: 640 },
         aspectRation: 1.777777777777778,
     }
 
@@ -136,7 +136,7 @@ const Camera = ({
                     ref={chromaRef}
                     className="absolute left-[50%] top-[50%] z-20 -translate-y-[50%]  -translate-x-[50%]  bg-transparent"
                 />
-                <div className="absolute left-[50%] top-[50%] z-10 h-[480px]  w-[640px] -translate-y-[50%] -translate-x-[50%]">
+                <div className="absolute left-[50%] top-[50%] z-10 h-[640px]  w-[1280px] -translate-y-[50%] -translate-x-[50%]">
                     <Image
                         alt="generated image"
                         src={getGenerateImage}
