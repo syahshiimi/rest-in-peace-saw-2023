@@ -17,7 +17,7 @@ const Camera = ({
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
-    const videoConstraits = {
+    const videoConstraints = {
         width: { min: 640 },
         height: { min: 480 },
         aspectRation: 1.777777777777778,
@@ -129,7 +129,7 @@ const Camera = ({
                 <Webcam
                     ref={webcamRef}
                     className=" invisible h-0 w-0"
-                    videoConstraints={videoConstraits}
+                    videoConstraints={videoConstraints}
                 />
                 <canvas ref={canvasRef} className=" invisible  h-0 w-0" />
                 <canvas
@@ -145,12 +145,12 @@ const Camera = ({
                     />
                 </div>
             </div>
-            <button
+            {/* <button
                 className="absolute top-[5%] bg-red-500"
                 // onClick={loadModel}
             >
                 Get Model
-            </button>
+            </button> */}
         </div>
     )
 }
