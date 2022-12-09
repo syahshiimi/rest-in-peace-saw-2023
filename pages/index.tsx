@@ -1,40 +1,40 @@
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import useSWR from "swr";
-import randomIntFromInterval from "../src/MinMaxGenerator";
-import GenerateImage2Image, { payloadProps } from "../src/GenerateImage2Image";
+import { useEffect, useState } from "react"
+import Image from "next/image"
+import useSWR from "swr"
+import randomIntFromInterval from "../src/MinMaxGenerator"
+import GenerateImage2Image, { payloadProps } from "../src/GenerateImage2Image"
 
-import QuestionOne from "../components/QuestionOne";
-import QuestionTwo from "../components/QuestionTwo";
-import QuestionThree from "../components/QuestionThree";
-import QuestionFour from "../components/QuestionFour";
-import QuestionButton from "../components/questionButton";
-import Camera from "./camera";
+import QuestionOne from "../components/QuestionOne"
+import QuestionTwo from "../components/QuestionTwo"
+import QuestionThree from "../components/QuestionThree"
+import QuestionFour from "../components/QuestionFour"
+import QuestionButton from "../components/questionButton"
+import Camera from "./camera"
 
 const getBase64StringFromDataURL = (dataURL: any) =>
-    dataURL.replace("data:", "").replace(/^.+,/, "");
+    dataURL.replace("data:", "").replace(/^.+,/, "")
 
-const randomInt = randomIntFromInterval(0, 13);
+const randomInt = randomIntFromInterval(0, 13)
 
 export default function Home() {
-    const [imgbase64, setImgBase64] = useState<string>();
-    const [img, setimg] = useState<string>();
-    const [isClick, setIsClick] = useState<string>("one");
-    const [StableImage, setStableImage] = useState<any>(); // fix this from any to correct type
+    const [imgbase64, setImgBase64] = useState<string>()
+    const [img, setimg] = useState<string>()
+    const [isClick, setIsClick] = useState<string>("one")
+    const [StableImage, setStableImage] = useState<any>() // fix this from any to correct type
 
     const [basePromptOne, setBasePromptOne] = useState<string>(
         "faded and grainy wide angle shot of a vintage 80's interior"
-    );
+    )
 
-    const [basePromptTwo, setBasePromptTwo] = useState<string>("futuristic");
+    const [basePromptTwo, setBasePromptTwo] = useState<string>("futuristic")
 
     const [basePromptThree, setBasePromptThree] = useState<string>(
         "soft and dreamy lighting"
-    );
+    )
     const [basePromptFour, setBasePromptFour] =
-        useState<string>("wong-kar wai vibe");
+        useState<string>("wong-kar wai vibe")
 
-    const basePrompt = `${basePromptOne}, ${basePromptTwo}, ${basePromptThree}, ${basePromptFour}, `;
+    const basePrompt = `${basePromptOne}, ${basePromptTwo}, ${basePromptThree}, ${basePromptFour}, `
 
     const payload: payloadProps = {
         init_images: [`data:image/png;base64,${imgbase64}`],
@@ -43,28 +43,28 @@ export default function Home() {
         steps: 20,
         cfg_scale: 26,
         prompt: basePrompt,
-    };
+    }
 
     const fetcher = (url: RequestInfo | URL) =>
-        fetch(url).then((res) => res.json());
+        fetch(url).then((res) => res.json())
 
-    const { data, error } = useSWR("api/getimageblob", fetcher, {});
+    const { data, error } = useSWR("api/getimageblob", fetcher, {})
 
     useEffect(() => {
-        setimg(data?.[randomInt]);
+        setimg(data?.[randomInt])
         if (img != undefined) {
             fetch(img)
                 .then((res) => res.blob())
                 .then((blob) => {
-                    const reader = new FileReader();
+                    const reader = new FileReader()
                     reader.onloadend = () => {
-                        const base64 = getBase64StringFromDataURL(reader.result);
-                        setImgBase64(base64);
-                    };
-                    reader.readAsDataURL(blob);
-                });
+                        const base64 = getBase64StringFromDataURL(reader.result)
+                        setImgBase64(base64)
+                    }
+                    reader.readAsDataURL(blob)
+                })
         }
-    }, [img, imgbase64, data, error]);
+    }, [img, imgbase64, data, error])
 
     const setView = () => {
         if (isClick == "one") {
@@ -75,7 +75,7 @@ export default function Home() {
                     basePrompt={basePromptOne}
                     setBasePrompt={setBasePromptOne}
                 />
-            );
+            )
         } else if (isClick == "two") {
             return (
                 <QuestionTwo
@@ -84,7 +84,7 @@ export default function Home() {
                     basePrompt={basePromptTwo}
                     setBasePrompt={setBasePromptTwo}
                 />
-            );
+            )
         } else if (isClick == "three") {
             return (
                 <QuestionThree
@@ -93,7 +93,7 @@ export default function Home() {
                     basePrompt={basePromptThree}
                     setBasePrompt={setBasePromptThree}
                 />
-            );
+            )
         } else if (isClick === "four") {
             return (
                 <QuestionFour
@@ -102,17 +102,19 @@ export default function Home() {
                     basePrompt={basePromptFour}
                     setBasePrompt={setBasePromptFour}
                 />
-            );
+            )
         } else if (isClick === "generate") {
             return (
                 <QuestionButton
                     setIsClick={setIsClick}
                     isClick={"showImage"}
-                    PostRequest={() => GenerateImage2Image(payload, setStableImage)}
+                    PostRequest={() =>
+                        GenerateImage2Image(payload, setStableImage)
+                    }
                 >
                     Generate!
                 </QuestionButton>
-            );
+            )
         } else if (isClick === "showImage") {
             return (
                 <div>
@@ -125,9 +127,9 @@ export default function Home() {
                         />
                     )}
                 </div>
-            );
+            )
         }
-    };
+    }
 
     return (
         <div className="bg-slate-800">
@@ -136,5 +138,5 @@ export default function Home() {
                 <div className="pt-8">{basePrompt}</div>
             </div>
         </div>
-    );
+    )
 }
