@@ -16,7 +16,7 @@ const QuestionOne = ({
 
     return (
         <>
-            <div className="pb-8 text-7xl font-bold">Question #1:</div>
+            <div className="pb-8 text-7xl font-bold">Question #1</div>
             <h2 className="text-4xl font-semibold">
                 We’d like to know more about you before we begin.
                 <br />
