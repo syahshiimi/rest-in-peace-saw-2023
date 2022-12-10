@@ -119,7 +119,12 @@ export default function Home() {
             return (
                 <div>
                     {!StableImage ? (
-                        <div>...loading</div>
+                        <Image
+                            src={"/puff.svg"}
+                            width={120}
+                            height={120}
+                            alt="puff svg"
+                        />
                     ) : (
                         <Camera
                             getGenerateImage={`data:image/png;base64, ${StableImage?.images}`}
