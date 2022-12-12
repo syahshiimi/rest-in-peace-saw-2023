@@ -4,6 +4,7 @@ import * as bodySegmentation from "@tensorflow-models/body-segmentation"
 import "@tensorflow/tfjs-core"
 import "@tensorflow/tfjs-backend-webgl"
 import Image from "next/image"
+import html2canvas from "html2canvas"
 
 interface CameraProps {
     getGenerateImage: string | undefined
@@ -17,10 +18,17 @@ const Camera = ({
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
+    const imageRef = useRef<any>(null)
     const videoConstraints = {
         width: 1000, // actual height (after rotation)
         height: 1920, // actual width (after rotation)
         // aspectRation: 1.777777777777778,
+    }
+
+    const getImage = () => {
+        html2canvas(document.body).then(function (canvas) {
+            document.body.appendChild(canvas)
+        })
     }
 
     useEffect(() => {
@@ -33,8 +41,8 @@ const Camera = ({
             }
 
             // load model
-            const model = await bodySegmentation.SupportedModels
-                .MediaPipeSelfieSegmentation
+            const model =
+                bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation
             // create Segmenter
             const segmenter = await bodySegmentation.createSegmenter(
                 model,
@@ -43,7 +51,7 @@ const Camera = ({
 
             setInterval(() => {
                 chromaKey(segmenter)
-            }, 1000 / 74)
+            }, 1000 / 288)
         }
 
         const chromaKey = async (segmenter: any) => {
@@ -121,7 +129,8 @@ const Camera = ({
             }
         }
         loadModel()
-    }, [])
+    })
+
     return (
         <div className="flex max-h-screen flex-col items-center justify-center overflow-hidden">
             {" "}
@@ -131,11 +140,12 @@ const Camera = ({
                     className=" invisible h-0 w-0"
                     videoConstraints={videoConstraints}
                 />
-                <canvas ref={canvasRef} className=" invisible  h-0 w-0" />
+                <canvas ref={canvasRef} className=" invisible h-0 w-0" />
                 <canvas
                     ref={chromaRef}
-                    className=" absolute left-[50%] top-[50%] z-20  max-h-screen -translate-y-[50%] -translate-x-[50%] rotate-90 bg-transparent"
+                    className=" absolute left-[50%] top-[50%] z-20  max-h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                 />
+                <img ref={imageRef} className="" />
                 <div className="absolute left-[50%] top-[50%] z-10 h-screen w-screen -translate-y-[50%] -translate-x-[50%] overflow-hidden">
                     <Image
                         alt="generated image"
@@ -144,6 +154,13 @@ const Camera = ({
                         fill={true}
                     />
                 </div>
+                <button
+                    type="button"
+                    className="absolute left-[70%] top-[50%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
+                    onClick={getImage}
+                >
+                    Get Image!
+                </button>
             </div>
             {/* <button
                 className="absolute top-[5%] bg-red-500"
