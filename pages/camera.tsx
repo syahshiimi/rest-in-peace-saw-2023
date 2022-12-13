@@ -17,6 +17,7 @@ const Camera = ({
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
     const imageRef = useRef<any>(null)
+    const appendRef = useRef<any>(null)
     const videoConstraints = {
         width: 1000, // actual height (after rotation)
         height: 1920, // actual width (after rotation)
@@ -24,8 +25,8 @@ const Camera = ({
     }
 
     const getImage = () => {
-        html2canvas(document.body).then(function (canvas) {
-            document.body.appendChild(canvas)
+        html2canvas(imageRef.current).then(function (appendRef) {
+            document.body.appendChild(appendRef)
         })
     }
 
@@ -130,43 +131,36 @@ const Camera = ({
     })
 
     return (
-        <div className="flex max-h-screen flex-col items-center justify-center overflow-hidden">
-            {" "}
-            <div className="flex max-h-screen flex-col">
+        <>
+            <div className="flex h-fit w-fit flex-col items-center justify-center">
                 <Webcam
                     ref={webcamRef}
                     className=" invisible h-0 w-0"
                     videoConstraints={videoConstraints}
                 />
                 <canvas ref={canvasRef} className=" invisible h-0 w-0" />
-                <canvas
-                    ref={chromaRef}
-                    className=" absolute left-[50%] top-[50%] z-20  max-h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
-                />
-                <img ref={imageRef} className="" />
-                <div className="absolute left-[50%] top-[50%] z-10 h-screen w-screen -translate-y-[50%] -translate-x-[50%] overflow-hidden">
-                    <Image
-                        alt="generated image"
-                        src={getGenerateImage}
-                        style={{ objectFit: "cover" }}
-                        fill={true}
+
+                <div
+                    ref={imageRef}
+                    className="absolute left-[50%] top-[50%] z-10 w-screen  -translate-y-[50%] -translate-x-[50%]"
+                >
+                    <canvas
+                        ref={chromaRef}
+                        className="absolute left-[50%] top-[50%] z-20  max-h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
+                    <img alt="generated image" src={getGenerateImage} />
                 </div>
                 <button
                     type="button"
                     className="absolute left-[70%] top-[50%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
-                    onClick={getImage}
+                    onClick={() => getImage()}
                 >
                     Get Image!
                 </button>
             </div>
-            {/* <button
-                className="absolute top-[5%] bg-red-500"
-                // onClick={loadModel}
-            >
-                Get Model
-            </button> */}
-        </div>
+
+            <div ref={appendRef} className="h-[1080px] w-[1080px]"></div>
+        </>
     )
 }
 
