@@ -128,7 +128,6 @@ export default function Home() {
                     ) : (
                         <Camera
                             getGenerateImage={`data:image/png;base64, ${StableImage?.images}`}
-                            startWebcam={true}
                         />
                     )}
                 </div>

@@ -8,12 +8,10 @@ import html2canvas from "html2canvas"
 
 interface CameraProps {
     getGenerateImage: string | undefined
-    startWebcam: boolean | string | undefined
 }
 
 const Camera = ({
     getGenerateImage = "/images/peace-center-2.jpg",
-    startWebcam = false,
 }: CameraProps) => {
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
