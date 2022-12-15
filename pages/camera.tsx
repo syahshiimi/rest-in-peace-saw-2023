@@ -25,8 +25,8 @@ const Camera = ({
     }
 
     const getImage = () => {
-        html2canvas(imageRef.current).then(function (appendRef) {
-            document.body.appendChild(appendRef)
+        html2canvas(imageRef.current).then(function (imageRef) {
+            appendRef.current.appendChild(imageRef)
         })
     }
 
@@ -109,7 +109,8 @@ const Camera = ({
                     0,
                     0,
                     canvas2.width,
-                    canvas2.height
+                    canvas2.height,
+                    { willReadFrequently: true }
                 )
                 const data = frame.data
 
@@ -142,13 +143,17 @@ const Camera = ({
 
                 <div
                     ref={imageRef}
-                    className="absolute left-[50%] top-[50%] z-10 w-screen  -translate-y-[50%] -translate-x-[50%]"
+                    className="absolute left-[50%] top-[50%] z-10 h-auto w-auto -translate-y-[50%] -translate-x-[50%] bg-cover"
                 >
                     <canvas
                         ref={chromaRef}
-                        className="absolute left-[50%] top-[50%] z-20  max-h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
+                        className="absolute left-[50%] top-[50%] z-20  h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
-                    <img alt="generated image" src={getGenerateImage} />
+                    <img
+                        alt="generated image"
+                        src={getGenerateImage}
+                        className="min-h-screen w-screen "
+                    />
                 </div>
                 <button
                     type="button"
@@ -158,8 +163,12 @@ const Camera = ({
                     Get Image!
                 </button>
             </div>
-
-            <div ref={appendRef} className="h-[1080px] w-[1080px]"></div>
+            <div className="flex flex-col items-center justify-center">
+                <div
+                    ref={appendRef}
+                    className="flex h-[1080px] w-[1920px]"
+                ></div>
+            </div>
         </>
     )
 }

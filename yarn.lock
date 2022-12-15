@@ -785,6 +785,11 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
+downloadjs@^1.4.7:
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/downloadjs/-/downloadjs-1.4.7.tgz#f69f96f940e0d0553dac291139865a3cd0101e3c"
+  integrity sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q==
+
 electron-to-chromium@^1.4.251:
   version "1.4.284"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.284.tgz#61046d1e4cab3a25238f6bf7413795270f125592"
@@ -1342,6 +1347,11 @@ hey-listen@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/hey-listen/-/hey-listen-1.0.8.tgz#8e59561ff724908de1aa924ed6ecc84a56a9aa68"
   integrity sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==
+
+html-to-image@^1.11.2:
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/html-to-image/-/html-to-image-1.11.2.tgz#684052ac34fdca8fb2481be268ced6b92c4026c0"
+  integrity sha512-M4D58k0RWRH65J+XzuBzxgWjoSf4mgSrMrqab7LwGXt3b5GY43qRPKM3iIrI0MrCToBcsQYcIqbIZDMVFh+dMw==
 
 html2canvas@^1.4.1:
   version "1.4.1"
