@@ -11,7 +11,7 @@ interface CameraProps {
 }
 
 const Camera = ({
-    getGenerateImage = "/images/test_image_2.png",
+    getGenerateImage = "/testImages/test_image_2.png",
 }: CameraProps) => {
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
@@ -24,9 +24,21 @@ const Camera = ({
         // aspectRation: 1.777777777777778,
     }
 
+    const saveAs = (uri: string, filename: string) => {
+        const link = document.createElement("a")
+        if (typeof link.download === "string") {
+            link.href = uri
+            link.download = filename
+            link.click()
+            //            document.body.removeChild(link)
+        }
+    }
+
     const getImage = () => {
         html2canvas(imageRef.current).then(function (imageRef) {
             appendRef.current.appendChild(imageRef)
+            console.log(imageRef.toDataURL("image/jpeg", 0.9))
+            saveAs(imageRef.toDataURL(), "new-image.png")
         })
     }
 
@@ -133,7 +145,7 @@ const Camera = ({
 
     return (
         <>
-            <div className="flex h-fit w-fit flex-col items-center justify-center">
+            <div className="flex h-fit w-fit flex-col items-center justify-center bg-black">
                 <Webcam
                     ref={webcamRef}
                     className=" invisible h-0 w-0"
@@ -141,7 +153,7 @@ const Camera = ({
                 />
                 <canvas ref={canvasRef} className=" invisible h-0 w-0" />
 
-                <div ref={imageRef} className="h-screen w-screen">
+                <div ref={imageRef} className="h-screen w-screen ">
                     <canvas
                         ref={chromaRef}
                         className="absolute left-[50%] top-[50%] z-20  h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
@@ -149,7 +161,7 @@ const Camera = ({
                     <img
                         alt="generated image"
                         src={getGenerateImage}
-                        className="h-full w-full"
+                        className="absolute left-[50%] top-[50%] z-10  h-full -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
                 </div>
                 <button
@@ -159,7 +171,10 @@ const Camera = ({
                 >
                     Get Image!
                 </button>
-                <div ref={appendRef} />
+                <div
+                    ref={appendRef}
+                    className="invisible hidden h-0 w-0 bg-black"
+                />
             </div>
         </>
     )

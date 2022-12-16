@@ -41,7 +41,7 @@ export default function Home() {
         include_init_images: true,
         denoising_strength: 0.55,
         steps: 20,
-        cfg_scale: 26,
+        cfg_scale: 25,
         prompt: basePrompt,
     }
 
@@ -136,8 +136,8 @@ export default function Home() {
     }
 
     return (
-        <div className="bg-slate-800">
-            <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center bg-slate-800 ">
+        <div className="bg-slate-600">
+            <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center  ">
                 {setView()}
                 <div className="pt-8">{basePrompt}</div>
             </div>
