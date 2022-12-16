@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Webcam from "react-webcam"
 import * as bodySegmentation from "@tensorflow-models/body-segmentation"
 import "@tensorflow/tfjs-core"
 import "@tensorflow/tfjs-backend-webgl"
-import Image from "next/image"
 import html2canvas from "html2canvas"
+import AlertModal from "../components/alertModal"
 
 interface CameraProps {
     getGenerateImage: string | undefined
@@ -18,6 +18,9 @@ const Camera = ({
     const chromaRef = useRef<any>(null)
     const imageRef = useRef<any>(null)
     const appendRef = useRef<any>(null)
+
+    const [isOpen, setIsOpen] = useState(false)
+
     const videoConstraints = {
         width: 1000, // actual height (after rotation)
         height: 1920, // actual width (after rotation)
@@ -167,7 +170,9 @@ const Camera = ({
                 <button
                     type="button"
                     className="absolute left-[70%] top-[50%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
-                    onClick={() => getImage()}
+                    onClick={() => {
+                        setIsOpen(true)
+                    }}
                 >
                     Get Image!
                 </button>
@@ -176,6 +181,7 @@ const Camera = ({
                     className="invisible hidden h-0 w-0 bg-black"
                 />
             </div>
+            <AlertModal isOpen={isOpen} setIsOpen={setIsOpen} />
         </>
     )
 }

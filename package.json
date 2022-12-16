@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.6",
     "@mediapipe/selfie_segmentation": "^0.1.1632777926",
     "@tensorflow-models/body-segmentation": "^1.0.1",
     "@tensorflow/tfjs-backend-webgl": "^4.1.0",
