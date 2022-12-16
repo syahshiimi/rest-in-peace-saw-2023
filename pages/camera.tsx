@@ -86,11 +86,11 @@ const Camera = ({
                     { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
                     { r: 0, g: 0, b: 0, a: 255 }, // background is black
                     undefined,
-                    0.9
+                    0.2 // min. probability to color a pixel as a foreground than backgorund
                 )
                 const opacity = 1
                 const flipHorizontal = false
-                const maskBlurAmount = 0.25
+                const maskBlurAmount = 0.225
                 await bodySegmentation.drawMask(
                     canvas,
                     video,
@@ -141,10 +141,7 @@ const Camera = ({
                 />
                 <canvas ref={canvasRef} className=" invisible h-0 w-0" />
 
-                <div
-                    ref={imageRef}
-                    className="absolute left-[50%] top-[50%] z-10 h-auto w-auto -translate-y-[50%] -translate-x-[50%] bg-cover"
-                >
+                <div ref={imageRef}>
                     <canvas
                         ref={chromaRef}
                         className="absolute left-[50%] top-[50%] z-20  h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
@@ -152,7 +149,7 @@ const Camera = ({
                     <img
                         alt="generated image"
                         src={getGenerateImage}
-                        className="min-h-screen w-screen "
+                        className="h-screen w-screen"
                     />
                 </div>
                 <button
@@ -162,12 +159,7 @@ const Camera = ({
                 >
                     Get Image!
                 </button>
-            </div>
-            <div className="flex flex-col items-center justify-center">
-                <div
-                    ref={appendRef}
-                    className="flex h-[1080px] w-[1920px]"
-                ></div>
+                <div ref={appendRef} />
             </div>
         </>
     )
