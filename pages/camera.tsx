@@ -11,7 +11,7 @@ interface CameraProps {
 }
 
 const Camera = ({
-    getGenerateImage = "/images/peace-center-2.jpg",
+    getGenerateImage = "/images/test_image_2.png",
 }: CameraProps) => {
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
@@ -86,7 +86,7 @@ const Camera = ({
                     { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
                     { r: 0, g: 0, b: 0, a: 255 }, // background is black
                     undefined,
-                    0.2 // min. probability to color a pixel as a foreground than backgorund
+                    0.35 // min. probability to color a pixel as a foreground than backgorund
                 )
                 const opacity = 1
                 const flipHorizontal = false
@@ -141,7 +141,7 @@ const Camera = ({
                 />
                 <canvas ref={canvasRef} className=" invisible h-0 w-0" />
 
-                <div ref={imageRef}>
+                <div ref={imageRef} className="h-screen w-screen">
                     <canvas
                         ref={chromaRef}
                         className="absolute left-[50%] top-[50%] z-20  h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
@@ -149,7 +149,7 @@ const Camera = ({
                     <img
                         alt="generated image"
                         src={getGenerateImage}
-                        className="h-screen w-screen"
+                        className="h-full w-full"
                     />
                 </div>
                 <button
