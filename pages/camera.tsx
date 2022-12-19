@@ -37,10 +37,19 @@ const Camera = ({
         }
     }
 
+    const canvasImageConfig = {
+        width: 1280,
+        height: 1280,
+        windowWidth: 1280,
+        windowHHeight: 1280,
+    }
+
     const getImage = () => {
-        html2canvas(imageRef.current).then(function(imageRef) {
+        html2canvas(imageRef.current, canvasImageConfig).then(function (
+            imageRef
+        ) {
             appendRef.current.appendChild(imageRef)
-            //            saveAs(imageRef.toDataURL(), "new-image.png")
+            saveAs(imageRef.toDataURL(), "new-image.png")
         })
     }
 
@@ -163,7 +172,7 @@ const Camera = ({
                     <img
                         alt="generated image"
                         src={getGenerateImage}
-                        className="absolute left-[50%] top-[50%] z-10  h-full w-full -translate-y-[50%] -translate-x-[50%]  bg-transparent"
+                        className="absolute left-[50%] top-[50%] z-10  h-full  -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
                 </div>
                 <button
