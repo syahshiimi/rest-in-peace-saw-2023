@@ -18,6 +18,7 @@ const Camera = ({
     const chromaRef = useRef<any>(null)
     const imageRef = useRef<any>(null)
     const appendRef = useRef<any>(null)
+    const modalRef = useRef<any>(null)
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -44,8 +45,10 @@ const Camera = ({
         windowWidth: 900,
         windowHHeight: 900,
         backgroundColor: null,
+        removeContainer: true,
     }
 
+    // getImage function to get image at FULL resolution
     const getImage = () => {
         html2canvas(imageRef.current, canvasImageConfig).then(function (
             imageRef
@@ -55,106 +58,125 @@ const Camera = ({
         })
     }
 
-    useEffect(() => {
-        // load bodySegmentation model
-        const loadModel = async () => {
-            const segmenterConfig: any = {
-                runtime: "mediapipe", // or 'tfjs'
-                solutionPath: "/selfie_segmentation",
-                modelType: "general",
-            }
+    const canvasImageConfigModal = {
+        width: 977,
+        height: 977,
+        windowWidth: 977,
+        windowHHeight: 977,
+        backgroundColor: null,
+        removeContainer: true,
+    }
 
-            // load model
-            const model =
-                bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation
-            // create Segmenter
-            const segmenter = await bodySegmentation.createSegmenter(
-                model,
-                segmenterConfig
+    const getImageModal = () => {
+        html2canvas(imageRef.current, canvasImageConfigModal).then(function (
+            imageRef
+        ) {
+            modalRef.current.appendChild(imageRef)
+            //saveImage(imageRef.toDataURL(), "new-image.png")
+        })
+    }
+
+    const loadModel = async () => {
+        const segmenterConfig: any = {
+            runtime: "mediapipe", // or 'tfjs'
+            solutionPath: "/selfie_segmentation",
+            modelType: "general",
+        }
+
+        // load model
+        const model =
+            bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation
+        // create Segmenter
+        const segmenter = await bodySegmentation.createSegmenter(
+            model,
+            segmenterConfig
+        )
+
+        setInterval(() => {
+            chromaKey(segmenter)
+        }, 1000 / 288)
+    }
+
+    const chromaKey = async (segmenter: any) => {
+        if (
+            !typeof webcamRef.current !== undefined &&
+            webcamRef.current !== null &&
+            webcamRef.current.video.readyState == 4
+        ) {
+            const video = webcamRef.current.video
+            const canvas = canvasRef.current
+            const canvas2 = chromaRef.current
+
+            // Set Constants based on Webcam Video
+            const videoHeight = video.videoHeight
+            const videoWidth = video.videoWidth
+
+            // set video dimensions
+            webcamRef.current.video.width = videoWidth
+            webcamRef.current.video.height = videoHeight
+
+            // set canvas dimensions
+            canvasRef.current.height = videoHeight
+            canvasRef.current.width = videoWidth
+
+            // Set chromakey canvas dimensions
+            chromaRef.current.height = videoHeight
+            chromaRef.current.width = videoWidth
+
+            // Make segmentations
+            const person = await segmenter.segmentPeople(video)
+            const coloredPartImage = await bodySegmentation.toBinaryMask(
+                person,
+                { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
+                { r: 0, g: 0, b: 0, a: 255 }, // background is black
+                undefined,
+                0.35 // min. probability to color a pixel as a foreground than backgorund
+            )
+            const opacity = 1
+            const flipHorizontal = false
+            const maskBlurAmount = 0.225
+            await bodySegmentation.drawMask(
+                canvas,
+                video,
+                coloredPartImage,
+                opacity,
+                maskBlurAmount,
+                flipHorizontal
             )
 
-            setInterval(() => {
-                chromaKey(segmenter)
-            }, 1000 / 288)
-        }
+            // Create context to manipulate RGB Values
+            const context = canvas.getContext("2d")
+            const context2 = canvas2.getContext("2d")
 
-        const chromaKey = async (segmenter: any) => {
-            if (
-                !typeof webcamRef.current !== undefined &&
-                webcamRef.current !== null &&
-                webcamRef.current.video.readyState == 4
-            ) {
-                const video = webcamRef.current.video
-                const canvas = canvasRef.current
-                const canvas2 = chromaRef.current
+            // Get frame data from canvas context
+            const frame = context.getImageData(
+                0,
+                0,
+                canvas2.width,
+                canvas2.height,
+                { willReadFrequently: true }
+            )
+            const data = frame.data
 
-                // Set Constants based on Webcam Video
-                const videoHeight = video.videoHeight
-                const videoWidth = video.videoWidth
-
-                // set video dimensions
-                webcamRef.current.video.width = videoWidth
-                webcamRef.current.video.height = videoHeight
-
-                // set canvas dimensions
-                canvasRef.current.height = videoHeight
-                canvasRef.current.width = videoWidth
-
-                // Set chromakey canvas dimensions
-                chromaRef.current.height = videoHeight
-                chromaRef.current.width = videoWidth
-
-                // Make segmentations
-                const person = await segmenter.segmentPeople(video)
-                const coloredPartImage = await bodySegmentation.toBinaryMask(
-                    person,
-                    { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
-                    { r: 0, g: 0, b: 0, a: 255 }, // background is black
-                    undefined,
-                    0.35 // min. probability to color a pixel as a foreground than backgorund
-                )
-                const opacity = 1
-                const flipHorizontal = false
-                const maskBlurAmount = 0.225
-                await bodySegmentation.drawMask(
-                    canvas,
-                    video,
-                    coloredPartImage,
-                    opacity,
-                    maskBlurAmount,
-                    flipHorizontal
-                )
-
-                // Create context to manipulate RGB Values
-                const context = canvas.getContext("2d")
-                const context2 = canvas2.getContext("2d")
-
-                // Get frame data from canvas context
-                const frame = context.getImageData(
-                    0,
-                    0,
-                    canvas2.width,
-                    canvas2.height,
-                    { willReadFrequently: true }
-                )
-                const data = frame.data
-
-                // Remove Black Pixels
-                for (let i = 0; i < data.length; i += 4) {
-                    const red = data[i + 0]
-                    const green = data[i + 1]
-                    const blue = data[i + 2]
-                    if (green == 0 && red == 0 && blue == 0) {
-                        data[i + 3] = 0
-                    }
+            // Remove Black Pixels
+            for (let i = 0; i < data.length; i += 4) {
+                const red = data[i + 0]
+                const green = data[i + 1]
+                const blue = data[i + 2]
+                if (green == 0 && red == 0 && blue == 0) {
+                    data[i + 3] = 0
                 }
-
-                // Draw pixels from canvas to canvas2
-                context2.putImageData(frame, 0, 0)
             }
+
+            // Draw pixels from canvas to canvas2
+            context2.putImageData(frame, 0, 0)
         }
+    }
+
+    useEffect(() => {
+        // load bodySegmentation model on page render
         loadModel()
-    })
+    }, [])
 
     return (
         <>
@@ -181,17 +203,18 @@ const Camera = ({
                     type="button"
                     className="absolute left-[70%] top-[50%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
                     onClick={() => {
-                        getImage()
+                        getImageModal()
                         setIsOpen(true)
                     }}
                 >
                     Get Image!
                 </button>
+                <div ref={appendRef} />
             </div>
             <AlertModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                appendRef={appendRef}
+                modalRef={modalRef}
             />
         </>
     )
