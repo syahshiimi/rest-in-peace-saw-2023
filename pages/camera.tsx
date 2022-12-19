@@ -38,10 +38,9 @@ const Camera = ({
     }
 
     const getImage = () => {
-        html2canvas(imageRef.current).then(function (imageRef) {
+        html2canvas(imageRef.current).then(function(imageRef) {
             appendRef.current.appendChild(imageRef)
-            console.log(imageRef.toDataURL("image/jpeg", 0.9))
-            saveAs(imageRef.toDataURL(), "new-image.png")
+            //            saveAs(imageRef.toDataURL(), "new-image.png")
         })
     }
 
@@ -164,24 +163,25 @@ const Camera = ({
                     <img
                         alt="generated image"
                         src={getGenerateImage}
-                        className="absolute left-[50%] top-[50%] z-10  h-full -translate-y-[50%] -translate-x-[50%]  bg-transparent"
+                        className="absolute left-[50%] top-[50%] z-10  h-full w-full -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
                 </div>
                 <button
                     type="button"
                     className="absolute left-[70%] top-[50%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
                     onClick={() => {
-                        setIsOpen(true)
+                        getImage()
                     }}
                 >
                     Get Image!
                 </button>
-                <div
-                    ref={appendRef}
-                    className="invisible hidden h-0 w-0 bg-black"
-                />
+                <div ref={appendRef} />
             </div>
-            <AlertModal isOpen={isOpen} setIsOpen={setIsOpen} />
+            <AlertModal
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                appendRef={appendRef}
+            />
         </>
     )
 }
