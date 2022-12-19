@@ -17,7 +17,6 @@ const Camera = ({
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
     const imageRef = useRef<any>(null)
-    const appendRef = useRef<any>(null)
     const modalRef = useRef<any>(null)
 
     const [isOpen, setIsOpen] = useState(false)
@@ -34,31 +33,11 @@ const Camera = ({
             link.href = uri
             link.download = filename
             link.click()
-            //            document.body.removeChild(link)
         }
     }
 
     // set image size on canvas and later for saving
     const canvasImageConfig = {
-        width: 900,
-        height: 900,
-        windowWidth: 900,
-        windowHHeight: 900,
-        backgroundColor: null,
-        removeContainer: true,
-    }
-
-    // getImage function to get image at FULL resolution
-    const getImage = () => {
-        html2canvas(imageRef.current, canvasImageConfig).then(function (
-            imageRef
-        ) {
-            appendRef.current.appendChild(imageRef)
-            //saveImage(imageRef.toDataURL(), "new-image.png")
-        })
-    }
-
-    const canvasImageConfigModal = {
         width: 977,
         height: 977,
         windowWidth: 977,
@@ -67,12 +46,21 @@ const Camera = ({
         removeContainer: true,
     }
 
+    // send image to modal for preview
     const getImageModal = () => {
-        html2canvas(imageRef.current, canvasImageConfigModal).then(function (
+        html2canvas(imageRef.current, canvasImageConfig).then(function (
             imageRef
         ) {
             modalRef.current.appendChild(imageRef)
-            //saveImage(imageRef.toDataURL(), "new-image.png")
+            //            saveImage(imageRef.toDataURL(), "new-image.png")
+        })
+    }
+
+    const saveImageModal = () => {
+        html2canvas(imageRef.current, canvasImageConfig).then(function (
+            imageRef
+        ) {
+            saveImage(imageRef.toDataURL(), "new-image.png")
         })
     }
 
@@ -179,7 +167,7 @@ const Camera = ({
 
     return (
         <>
-            <div className="flex h-fit w-fit flex-col items-center justify-center bg-black">
+            <div className="flex h-fit w-fit flex-col items-center justify-center  bg-black">
                 <Webcam
                     ref={webcamRef}
                     className=" invisible h-0 w-0"
@@ -187,7 +175,7 @@ const Camera = ({
                 />
                 <canvas ref={canvasRef} className=" invisible h-0 w-0" />
 
-                <div ref={imageRef} className="h-screen w-screen ">
+                <div ref={imageRef} className="h-screen w-screen  ">
                     <canvas
                         ref={chromaRef}
                         className="absolute left-[50%] top-[50%] z-20  h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
@@ -206,14 +194,14 @@ const Camera = ({
                         setIsOpen(true)
                     }}
                 >
-                    Get Image!
+                    Preview Image
                 </button>
-                <div ref={appendRef} />
             </div>
             <AlertModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 modalRef={modalRef}
+                saveImageModal={saveImageModal}
             />
         </>
     )
