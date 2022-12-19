@@ -27,7 +27,7 @@ const Camera = ({
         // aspectRation: 1.777777777777778,
     }
 
-    const saveAs = (uri: string, filename: string) => {
+    const saveImage = (uri: string, filename: string) => {
         const link = document.createElement("a")
         if (typeof link.download === "string") {
             link.href = uri
@@ -39,10 +39,11 @@ const Camera = ({
 
     // set image size on canvas and later for saving
     const canvasImageConfig = {
-        width: 1280,
-        height: 1280,
-        windowWidth: 1280,
-        windowHHeight: 1280,
+        width: 900,
+        height: 900,
+        windowWidth: 900,
+        windowHHeight: 900,
+        backgroundColor: null,
     }
 
     const getImage = () => {
@@ -50,7 +51,7 @@ const Camera = ({
             imageRef
         ) {
             appendRef.current.appendChild(imageRef)
-            saveAs(imageRef.toDataURL(), "new-image.png")
+            //saveImage(imageRef.toDataURL(), "new-image.png")
         })
     }
 
@@ -181,11 +182,11 @@ const Camera = ({
                     className="absolute left-[70%] top-[50%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
                     onClick={() => {
                         getImage()
+                        setIsOpen(true)
                     }}
                 >
                     Get Image!
                 </button>
-                <div ref={appendRef} />
             </div>
             <AlertModal
                 isOpen={isOpen}
