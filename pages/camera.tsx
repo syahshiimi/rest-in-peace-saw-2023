@@ -37,6 +37,7 @@ const Camera = ({
         }
     }
 
+    // set image size on canvas and later for saving
     const canvasImageConfig = {
         width: 1280,
         height: 1280,
