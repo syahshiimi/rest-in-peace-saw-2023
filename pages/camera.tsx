@@ -16,9 +16,9 @@ const Camera = ({
     const webcamRef = useRef<any>(null)
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
-    const imageRef = useRef<any>(null)
-    const appendRef = useRef<any>(null)
-    const modalRef = useRef<any>(null)
+    const imageRef = useRef<HTMLDivElement>(null)
+    const appendRef = useRef<HTMLDivElement>(null)
+    const modalRef = useRef<HTMLDivElement>(null)
 
     const [isOpen, setIsOpen] = useState(false)
 
