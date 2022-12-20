@@ -5,19 +5,21 @@ interface IAlertModal {
     isOpen: boolean | undefined
     setIsOpen: Dispatch<SetStateAction<boolean>>
     modalRef: MutableRefObject<HTMLDivElement>
-    saveImageModal: () => void
+    saveImage: () => void
+    removeAppend: () => void
 }
 
 const AlertModal = ({
     isOpen,
     setIsOpen,
     modalRef,
-    saveImageModal,
+    saveImage,
+    removeAppend,
 }: IAlertModal) => {
     return (
         <Transition
             show={isOpen}
-            enter="transition duration-100 ease-out"
+            enter="transition duration-500 ease-out"
             enterFrom="transform scale-95 opacity-0"
             enterTo="transform scale-100 opacity-100"
             leave="transition duration-75 ease-out"
@@ -26,7 +28,9 @@ const AlertModal = ({
             as={Fragment}
         >
             <Dialog
-                onClose={() => setIsOpen(false)}
+                onClose={() => {
+                    setIsOpen(false), removeAppend()
+                }}
                 className="fixed inset-0 z-50 flex items-end justify-center pb-10 "
             >
                 <div
@@ -46,13 +50,15 @@ const AlertModal = ({
                     </p>
                     <div className="flex w-full flex-row justify-between gap-8 pb-2 pt-3">
                         <button
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => {
+                                setIsOpen(false), removeAppend()
+                            }}
                             className="rounded-xl bg-green-600 px-4 py-3 font-semibold shadow-md"
                         >
                             TRY AGAIN
                         </button>
                         <button
-                            onClick={saveImageModal}
+                            onClick={saveImage}
                             className="rounded-xl bg-rose-700 px-4 py-3 font-semibold shadow-md"
                         >
                             SAVE
