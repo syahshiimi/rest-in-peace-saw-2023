@@ -17,6 +17,7 @@ const Camera = ({
     const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
     const imageRef = useRef<any>(null)
+    const appendRef = useRef<any>(null)
     const modalRef = useRef<any>(null)
 
     const [isOpen, setIsOpen] = useState(false)
@@ -27,7 +28,7 @@ const Camera = ({
         // aspectRation: 1.777777777777778,
     }
 
-    const saveImage = (uri: string, filename: string) => {
+    const saveAs = (uri: string, filename: string) => {
         const link = document.createElement("a")
         if (typeof link.download === "string") {
             link.href = uri
@@ -46,21 +47,31 @@ const Camera = ({
         removeContainer: true,
     }
 
-    // send image to modal for preview
-    const getImageModal = () => {
+    const setAppendImage = () => {
+        html2canvas(imageRef.current, canvasImageConfig).then(function (
+            imageRef
+        ) {
+            appendRef.current.appendChild(imageRef)
+        })
+    }
+    const setModalImage = () => {
         html2canvas(imageRef.current, canvasImageConfig).then(function (
             imageRef
         ) {
             modalRef.current.appendChild(imageRef)
-            //            saveImage(imageRef.toDataURL(), "new-image.png")
         })
     }
 
-    const saveImageModal = () => {
-        html2canvas(imageRef.current, canvasImageConfig).then(function (
-            imageRef
+    const clearAppendImage = () => {
+        appendRef.current.removeChild(appendRef.current.firstChild)
+    }
+
+    // Save Image
+    const saveImage = () => {
+        html2canvas(appendRef.current, canvasImageConfig).then(function (
+            appendRef
         ) {
-            saveImage(imageRef.toDataURL(), "new-image.png")
+            saveAs(appendRef.toDataURL(), "new-image.png")
         })
     }
 
@@ -190,18 +201,21 @@ const Camera = ({
                     type="button"
                     className="absolute left-[70%] top-[50%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
                     onClick={() => {
-                        getImageModal()
+                        setModalImage()
+                        setAppendImage()
                         setIsOpen(true)
                     }}
                 >
                     Preview Image
                 </button>
+                <div ref={appendRef} className="" />
             </div>
             <AlertModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 modalRef={modalRef}
-                saveImageModal={saveImageModal}
+                saveImage={saveImage}
+                removeAppend={clearAppendImage}
             />
         </>
     )
