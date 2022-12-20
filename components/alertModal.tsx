@@ -33,23 +33,21 @@ const AlertModal = ({
                     className="fixed inset-0 bg-black/90 "
                     aria-hidden="true"
                 />
-                <Dialog.Panel className=" z-30 flex flex-col items-start justify-start gap-4 rounded-xl bg-amber-600 px-6 py-4">
-                    <Dialog.Title className="text-2xl font-bold text-slate-300">
+                <Dialog.Panel className=" z-30 flex flex-col items-start justify-start gap-2 rounded-xl bg-amber-600 px-6 py-4">
+                    <Dialog.Title className="text-2xl font-bold ">
                         Picture Saved!
                     </Dialog.Title>
                     <Dialog.Description className="text-xl font-medium">
                         To save your image, press the save button.
                     </Dialog.Description>
-
                     <p>
                         Proceed to the Gallery Sitter to get a digital copy of
                         your image 💪🏾
                     </p>
-
-                    <div className="flex w-full flex-row justify-between gap-8">
+                    <div className="flex w-full flex-row justify-between gap-8 pb-2 pt-3">
                         <button
                             onClick={() => setIsOpen(false)}
-                            className="font-semibold"
+                            className="rounded-xl bg-green-600 px-4 py-3 font-semibold shadow-md"
                         >
                             TRY AGAIN
                         </button>
@@ -63,7 +61,7 @@ const AlertModal = ({
                 </Dialog.Panel>
                 <div
                     ref={modalRef}
-                    className="absolute left-[50%] top-[50%] z-10 h-full -translate-y-[50%] -translate-x-[50%]  scale-50"
+                    className="absolute left-[50%] top-[45%] z-10 h-full -translate-y-[50%] -translate-x-[50%]  scale-50"
                 />
             </Dialog>
         </Transition>
