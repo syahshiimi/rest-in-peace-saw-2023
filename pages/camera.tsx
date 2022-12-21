@@ -95,7 +95,7 @@ const Camera = ({
 
             setInterval(() => {
                 chromaKey(segmenter)
-            }, 1000 / 288)
+            }, 1000 / 144)
         }
 
         const chromaKey = async (segmenter: any) => {
@@ -104,28 +104,25 @@ const Camera = ({
                 webcamRef.current !== null &&
                 webcamRef.current.video.readyState == 4
             ) {
-                const video = webcamRef.current.video
-                const canvas = canvasRef.current
-                const canvas2 = chromaRef.current
+                const webcam = webcamRef.current.video
+                const canvas = chromaRef.current
 
                 // Set Constants based on Webcam Video
-                const videoHeight = video.videoHeight
-                const videoWidth = video.videoWidth
+                const videoHeight = webcam.videoHeight
+                const videoWidth = webcam.videoWidth
 
                 // set video dimensions
                 webcamRef.current.video.width = videoWidth
                 webcamRef.current.video.height = videoHeight
 
                 // set canvas dimensions
-                canvasRef.current.height = videoHeight
-                canvasRef.current.width = videoWidth
 
                 // Set chromakey canvas dimensions
                 chromaRef.current.height = videoHeight
                 chromaRef.current.width = videoWidth
 
                 // Make segmentations
-                const person = await segmenter.segmentPeople(video)
+                const person = await segmenter.segmentPeople(webcam)
                 const coloredPartImage = await bodySegmentation.toBinaryMask(
                     person,
                     { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
@@ -137,8 +134,8 @@ const Camera = ({
                 const flipHorizontal = false
                 const maskBlurAmount = 0.225
                 await bodySegmentation.drawMask(
-                    canvas,
-                    video,
+                    canvas, // pass canvas to draw
+                    webcam, // feed video input
                     coloredPartImage,
                     opacity,
                     maskBlurAmount,
@@ -147,14 +144,13 @@ const Camera = ({
 
                 // Create context to manipulate RGB Values
                 const context = canvas.getContext("2d")
-                const context2 = canvas2.getContext("2d")
 
                 // Get frame data from canvas context
                 const frame = context.getImageData(
                     0,
                     0,
-                    canvas2.width,
-                    canvas2.height,
+                    canvas.width,
+                    canvas.height,
                     { willReadFrequently: true }
                 )
                 const data = frame.data
@@ -169,8 +165,8 @@ const Camera = ({
                     }
                 }
 
-                // Draw pixels from canvas to canvas2
-                context2.putImageData(frame, 0, 0)
+                // Draw pixels to canvas context
+                context.putImageData(frame, 0, 0)
             }
         }
         loadModel()
@@ -178,15 +174,13 @@ const Camera = ({
 
     return (
         <>
-            <div className="flex h-fit w-fit flex-col items-center justify-center  bg-black">
+            <div className="flex h-fit w-fit flex-col items-center justify-center bg-black">
                 <Webcam
                     ref={webcamRef}
                     className=" invisible h-0 w-0"
                     videoConstraints={videoConstraints}
                 />
-                <canvas ref={canvasRef} className=" invisible h-0 w-0" />
-
-                <div ref={imageRef} className="h-screen w-screen  ">
+                <div ref={imageRef} className="h-screen w-screen">
                     <canvas
                         ref={chromaRef}
                         className="absolute left-[50%] top-[50%] z-20  h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
