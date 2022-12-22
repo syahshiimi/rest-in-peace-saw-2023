@@ -14,7 +14,6 @@ const Camera = ({
     getGenerateImage = "/testImages/test_image_2.png",
 }: CameraProps) => {
     const webcamRef = useRef<any>(null)
-    const canvasRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
     const imageRef = useRef<HTMLDivElement>(null)
     const appendRef = useRef<HTMLDivElement>(null)
@@ -71,7 +70,6 @@ const Camera = ({
         appendRef.current.removeChild(appendRef.current.firstChild)
     }
 
-    // Save Image
     const saveImage = () => {
         html2canvas(appendRef.current, canvasImageConfig).then(function (
             appendRef
@@ -117,8 +115,6 @@ const Camera = ({
             // set video dimensions
             webcamRef.current.video.width = videoWidth
             webcamRef.current.video.height = videoHeight
-
-            // set canvas dimensions
 
             // Set chromakey canvas dimensions
             chromaRef.current.height = videoHeight
@@ -175,8 +171,6 @@ const Camera = ({
 
     useEffect(() => {
         navigator.mediaDevices.enumerateDevices().then(handleDevices)
-
-        // load bodySegmentation model on page render
         loadModel()
     }, [handleDevices])
 
