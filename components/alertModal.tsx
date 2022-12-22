@@ -38,7 +38,7 @@ const AlertModal = ({
                     aria-hidden="true"
                 />
                 <Dialog.Panel className=" z-30 flex flex-col items-start justify-start gap-2 rounded-xl bg-amber-600 px-6 py-4">
-                    <Dialog.Title className="text-2xl font-bold ">
+                    <Dialog.Title className="text-3xl font-bold ">
                         Picture Saved!
                     </Dialog.Title>
                     <Dialog.Description className="text-xl font-medium">
@@ -48,18 +48,19 @@ const AlertModal = ({
                         Proceed to the Gallery Sitter to get a digital copy of
                         your image 💪🏾
                     </p>
+                    <p>Don't like your image? 😢 Click on try again 😍</p>
                     <div className="flex w-full flex-row justify-between gap-8 pb-2 pt-3">
                         <button
                             onClick={() => {
                                 setIsOpen(false), removeAppend()
                             }}
-                            className="rounded-xl bg-green-600 px-4 py-3 font-semibold shadow-md"
+                            className="rounded-xl bg-rose-600 px-4 py-3 font-semibold shadow-md"
                         >
                             TRY AGAIN
                         </button>
                         <button
                             onClick={saveImage}
-                            className="rounded-xl bg-rose-700 px-4 py-3 font-semibold shadow-md"
+                            className="rounded-xl bg-green-600 px-4 py-3 font-semibold shadow-md"
                         >
                             SAVE
                         </button>
@@ -67,7 +68,7 @@ const AlertModal = ({
                 </Dialog.Panel>
                 <div
                     ref={modalRef}
-                    className="absolute left-[50%] top-[45%] z-10 h-full -translate-y-[50%] -translate-x-[50%]  scale-50"
+                    className="absolute left-[50%] top-[40%] z-10 h-full -translate-y-[50%] -translate-x-[50%] scale-50  "
                 />
             </Dialog>
         </Transition>

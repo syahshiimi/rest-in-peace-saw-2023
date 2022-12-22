@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import Webcam from "react-webcam"
 import * as bodySegmentation from "@tensorflow-models/body-segmentation"
 import "@tensorflow/tfjs-core"
@@ -22,11 +22,16 @@ const Camera = ({
 
     const [isOpen, setIsOpen] = useState(false)
 
-    const videoConstraints = {
-        width: 1000, // actual height (after rotation)
-        height: 1920, // actual width (after rotation)
-        // aspectRation: 1.777777777777778,
-    }
+    const [deviceId, setDeviceId] = useState({})
+    const [devices, setDevices] = useState([])
+
+    const handleDevices = useCallback(
+        (mediaDevices) =>
+            setDevices(
+                mediaDevices.filter(({ kind }) => kind === "videoinput")
+            ),
+        [setDevices]
+    )
 
     const saveAs = (uri: string, filename: string) => {
         const link = document.createElement("a")
@@ -75,111 +80,123 @@ const Camera = ({
         })
     }
 
-    useEffect(() => {
-        // load bodySegmentation model on page render
-        const loadModel = async () => {
-            const segmenterConfig: any = {
-                runtime: "mediapipe", // or 'tfjs'
-                solutionPath: "/selfie_segmentation",
-                modelType: "general",
-            }
+    const loadModel = async () => {
+        const segmenterConfig: any = {
+            runtime: "mediapipe", // or 'tfjs'
+            solutionPath: "/selfie_segmentation",
+            modelType: "general",
+        }
 
-            // load model
-            const model =
-                bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation
-            // create Segmenter
-            const segmenter = await bodySegmentation.createSegmenter(
-                model,
-                segmenterConfig
+        // load model
+        const model =
+            bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation
+        // create Segmenter
+        const segmenter = await bodySegmentation.createSegmenter(
+            model,
+            segmenterConfig
+        )
+
+        setInterval(() => {
+            chromaKey(segmenter)
+        }, 1000 / 144)
+    }
+
+    const chromaKey = async (segmenter: any) => {
+        if (
+            !typeof webcamRef.current !== undefined &&
+            webcamRef.current !== null &&
+            webcamRef.current.video.readyState == 4
+        ) {
+            const webcam = webcamRef.current.video
+            const canvas = chromaRef.current
+
+            // Set Constants based on Webcam Video
+            const videoHeight = webcam.videoHeight
+            const videoWidth = webcam.videoWidth
+
+            // set video dimensions
+            webcamRef.current.video.width = videoWidth
+            webcamRef.current.video.height = videoHeight
+
+            // set canvas dimensions
+
+            // Set chromakey canvas dimensions
+            chromaRef.current.height = videoHeight
+            chromaRef.current.width = videoWidth
+
+            // Make segmentations
+            const person = await segmenter.segmentPeople(webcam)
+            const coloredPartImage = await bodySegmentation.toBinaryMask(
+                person,
+                { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
+                { r: 0, g: 0, b: 0, a: 255 }, // background is black
+                undefined,
+                0.5 // min. probability to color a pixel as a foreground than backgorund
+            )
+            const opacity = 1
+            const flipHorizontal = false
+            const maskBlurAmount = 0.225
+            await bodySegmentation.drawMask(
+                canvas, // pass canvas to draw
+                webcam, // feed video input
+                coloredPartImage,
+                opacity,
+                maskBlurAmount,
+                flipHorizontal
             )
 
-            setInterval(() => {
-                chromaKey(segmenter)
-            }, 1000 / 144)
-        }
+            // Create context to manipulate RGB Values
+            const context = canvas.getContext("2d")
 
-        const chromaKey = async (segmenter: any) => {
-            if (
-                !typeof webcamRef.current !== undefined &&
-                webcamRef.current !== null &&
-                webcamRef.current.video.readyState == 4
-            ) {
-                const webcam = webcamRef.current.video
-                const canvas = chromaRef.current
+            // Get frame data from canvas context
+            const frame = context.getImageData(
+                0,
+                0,
+                canvas.width,
+                canvas.height,
+                { willReadFrequently: true }
+            )
+            const data = frame.data
 
-                // Set Constants based on Webcam Video
-                const videoHeight = webcam.videoHeight
-                const videoWidth = webcam.videoWidth
-
-                // set video dimensions
-                webcamRef.current.video.width = videoWidth
-                webcamRef.current.video.height = videoHeight
-
-                // set canvas dimensions
-
-                // Set chromakey canvas dimensions
-                chromaRef.current.height = videoHeight
-                chromaRef.current.width = videoWidth
-
-                // Make segmentations
-                const person = await segmenter.segmentPeople(webcam)
-                const coloredPartImage = await bodySegmentation.toBinaryMask(
-                    person,
-                    { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
-                    { r: 0, g: 0, b: 0, a: 255 }, // background is black
-                    undefined,
-                    0.35 // min. probability to color a pixel as a foreground than backgorund
-                )
-                const opacity = 1
-                const flipHorizontal = false
-                const maskBlurAmount = 0.225
-                await bodySegmentation.drawMask(
-                    canvas, // pass canvas to draw
-                    webcam, // feed video input
-                    coloredPartImage,
-                    opacity,
-                    maskBlurAmount,
-                    flipHorizontal
-                )
-
-                // Create context to manipulate RGB Values
-                const context = canvas.getContext("2d")
-
-                // Get frame data from canvas context
-                const frame = context.getImageData(
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height,
-                    { willReadFrequently: true }
-                )
-                const data = frame.data
-
-                // Remove Black Pixels
-                for (let i = 0; i < data.length; i += 4) {
-                    const red = data[i + 0]
-                    const green = data[i + 1]
-                    const blue = data[i + 2]
-                    if (green == 0 && red == 0 && blue == 0) {
-                        data[i + 3] = 0
-                    }
+            // Remove Black Pixels
+            for (let i = 0; i < data.length; i += 4) {
+                const red = data[i + 0]
+                const green = data[i + 1]
+                const blue = data[i + 2]
+                if (green == 0 && red == 0 && blue == 0) {
+                    data[i + 3] = 0
                 }
-
-                // Draw pixels to canvas context
-                context.putImageData(frame, 0, 0)
             }
+
+            // Draw pixels to canvas context
+            context.putImageData(frame, 0, 0)
         }
+    }
+
+    useEffect(() => {
+        navigator.mediaDevices.enumerateDevices().then(handleDevices)
+
+        // load bodySegmentation model on page render
         loadModel()
-    }, [])
+    }, [handleDevices])
 
     return (
         <>
             <div className="flex h-fit w-fit flex-col items-center justify-center bg-black">
-                <Webcam
-                    ref={webcamRef}
-                    className=" invisible h-0 w-0"
-                    videoConstraints={videoConstraints}
-                />
+                {devices.map((device, key) => {
+                    return (
+                        <Webcam
+                            key={devices[0].deviceId | key}
+                            ref={webcamRef}
+                            className=" invisible h-0 w-0"
+                            videoConstraints={{
+                                width: 1080,
+                                height: 1920,
+                                deviceId: device.deviceId,
+                            }}
+                        />
+                    )
+                })}
                 <div ref={imageRef} className="h-screen w-screen">
                     <canvas
                         ref={chromaRef}
@@ -193,14 +210,23 @@ const Camera = ({
                 </div>
                 <button
                     type="button"
-                    className="absolute left-[70%] top-[50%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
+                    className="absolute left-[75%] top-[1%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
                     onClick={() => {
                         setModalImage()
                         setAppendImage()
                         setIsOpen(true)
                     }}
                 >
-                    Preview Image
+                    Preview
+                </button>
+                <button
+                    type="button"
+                    className="absolute left-[15%] top-[1%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
+                    onClick={() => {
+                        window.location.reload()
+                    }}
+                >
+                    Restart
                 </button>
                 <div ref={appendRef} className="" />
             </div>

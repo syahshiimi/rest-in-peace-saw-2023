@@ -139,7 +139,7 @@ export default function Home() {
         <div className="bg-slate-600">
             <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center dark:text-white  ">
                 {setView()}
-                <div className="pt-8">{basePrompt}</div>
+                {/* <div className="pt-8">{basePrompt}</div> */}
             </div>
         </div>
     )
