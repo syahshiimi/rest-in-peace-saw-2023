@@ -6,7 +6,7 @@ interface IAlertModal {
     setIsOpen: Dispatch<SetStateAction<boolean>>
     modalRef: MutableRefObject<HTMLDivElement>
     saveImage: () => void
-    removeAppend: () => void
+    removeAppend?: () => void
 }
 
 const AlertModal = ({

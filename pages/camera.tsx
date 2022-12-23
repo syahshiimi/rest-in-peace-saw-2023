@@ -43,10 +43,10 @@ const Camera = ({
 
     // set image size on canvas and later for saving
     const canvasImageConfig = {
-        width: 977,
-        height: 977,
-        windowWidth: 977,
-        windowHHeight: 977,
+        width: 1080,
+        height: 1920,
+        windowWidth: 1080,
+        windowHHeight: 1920,
         backgroundColor: null,
         removeContainer: true,
     }
@@ -176,7 +176,7 @@ const Camera = ({
 
     return (
         <>
-            <div className="flex h-fit w-fit flex-col items-center justify-center bg-black">
+            <div className="flex min-h-screen min-w-fit flex-col items-center justify-end bg-black pb-4">
                 {devices.map((device, key) => {
                     return (
                         <Webcam
@@ -184,46 +184,51 @@ const Camera = ({
                             ref={webcamRef}
                             className=" invisible h-0 w-0"
                             videoConstraints={{
-                                width: 1080,
-                                height: 1920,
+                                width: 1920,
+                                height: 1080,
                                 deviceId: device.deviceId,
                             }}
                         />
                     )
                 })}
-                <div ref={imageRef} className="h-screen w-screen">
+
+                <div ref={imageRef} className="h-fit w-screen">
                     <canvas
                         ref={chromaRef}
-                        className="absolute left-[50%] top-[50%] z-20  h-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
+                        className="absolute left-[50%] top-[50%] z-20 max-h-full max-w-full -translate-y-[50%]  -translate-x-[50%] rotate-90 scale-150 bg-transparent"
                     />
                     <img
                         alt="generated image"
                         src={getGenerateImage}
-                        className="absolute left-[50%] top-[50%] z-10  h-full  -translate-y-[50%] -translate-x-[50%]  bg-transparent"
+                        className="absolute left-[50%] top-[50%] z-10 h-full w-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
                 </div>
-                <button
-                    type="button"
-                    className="absolute left-[75%] top-[1%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
-                    onClick={() => {
-                        setModalImage()
-                        setAppendImage()
-                        setIsOpen(true)
-                    }}
-                >
-                    Preview
-                </button>
-                <button
-                    type="button"
-                    className="absolute left-[15%] top-[1%] z-30 rounded-md bg-red-500 px-5 py-4 text-4xl"
-                    onClick={() => {
-                        window.location.reload()
-                    }}
-                >
-                    Restart
-                </button>
-                <div ref={appendRef} className="" />
+
+                <div className="flex grow flex-row items-end justify-center gap-6">
+                    <button
+                        type="button"
+                        className=" z-30 rounded-md bg-blue-500 px-3 py-2  font-semibold"
+                        onClick={() => {
+                            window.location.reload()
+                        }}
+                    >
+                        RESTART
+                    </button>
+                    <button
+                        type="button"
+                        className=" z-30 rounded-md bg-violet-500 px-3 py-2  font-semibold"
+                        onClick={() => {
+                            setModalImage()
+                            setAppendImage()
+                            setIsOpen(true)
+                        }}
+                    >
+                        PREVIEW
+                    </button>
+                </div>
             </div>
+
+            <div ref={appendRef} className="" />
             <AlertModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
