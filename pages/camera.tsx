@@ -21,11 +21,10 @@ const Camera = ({
 
     const [isOpen, setIsOpen] = useState(false)
 
-    const [deviceId, setDeviceId] = useState({})
     const [devices, setDevices] = useState([])
 
     const handleDevices = useCallback(
-        (mediaDevices) =>
+        (mediaDevices: any) =>
             setDevices(
                 mediaDevices.filter(({ kind }) => kind === "videoinput")
             ),
@@ -127,7 +126,7 @@ const Camera = ({
                 { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
                 { r: 0, g: 0, b: 0, a: 255 }, // background is black
                 undefined,
-                0.5 // min. probability to color a pixel as a foreground than backgorund
+                0.3 // min. probability to color a pixel as a foreground than backgorund
             )
             const opacity = 1
             const flipHorizontal = false
