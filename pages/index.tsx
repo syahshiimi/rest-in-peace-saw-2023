@@ -11,6 +11,8 @@ import QuestionFour from "../components/QuestionFour"
 import QuestionButton from "../components/questionButton"
 import Camera from "./camera"
 
+// Static Import Assets
+
 const getBase64StringFromDataURL = (dataURL: any) =>
     dataURL.replace("data:", "").replace(/^.+,/, "")
 
@@ -117,12 +119,12 @@ export default function Home() {
             )
         } else if (isClick === "showImage") {
             return (
-                <div>
+                <>
                     {!StableImage ? (
                         <Image
                             src={"/puff.svg"}
-                            width={120}
-                            height={120}
+                            width={520}
+                            height={520}
                             alt="puff svg"
                         />
                     ) : (
@@ -130,13 +132,40 @@ export default function Home() {
                             getGenerateImage={`data:image/png;base64, ${StableImage?.images}`}
                         />
                     )}
-                </div>
+                </>
             )
         }
     }
 
+    let timeout: any
+    let isMoving = false
+
+    const [vidOpacity, setVidOpacity] = useState<string>("opacity-100")
+
+    const mouseStop = () => {
+        setVidOpacity("opacity-100")
+        console.log("mouse is stopped!")
+        isMoving = false
+    }
+
+    const mouseMove = () => {
+        console.log("mouse is moving")
+        isMoving = true
+        setVidOpacity("opacity-0 pointer-events-none")
+        clearTimeout(timeout)
+
+        if (isMoving == true) {
+            timeout = setTimeout(mouseStop, 15000)
+        }
+    }
+
     return (
-        <div className="bg-slate-600">
+        <div onMouseMove={mouseMove} className="bg-slate-600">
+            <video
+                autoPlay
+                src="/videos/screensaver_5.mp4"
+                className={`absolute h-screen object-cover ${vidOpacity} transition duration-700 ease-in-out`}
+            />
             <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center dark:text-white  ">
                 {setView()}
                 {/* <div className="pt-8">{basePrompt}</div> */}
