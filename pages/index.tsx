@@ -19,11 +19,13 @@ const getBase64StringFromDataURL = (dataURL: any) =>
 const randomInt = randomIntFromInterval(0, 13)
 
 export default function Home() {
+    // Images
     const [imgbase64, setImgBase64] = useState<string>()
     const [img, setimg] = useState<string>()
     const [isClick, setIsClick] = useState<string>("one")
     const [StableImage, setStableImage] = useState<any>() // fix this from any to correct type
 
+    // Prompts
     const [basePromptOne, setBasePromptOne] = useState<string>(
         "faded and grainy wide angle shot of a vintage 80's interior"
     )
@@ -38,6 +40,30 @@ export default function Home() {
 
     const basePrompt = `${basePromptOne}, ${basePromptTwo}, ${basePromptThree}, ${basePromptFour}, `
 
+    // Mouseover Screensaver
+    let timeout: ReturnType<typeof setTimeout>
+    let isMoving = false
+
+    const [vidOpacity, setVidOpacity] = useState<string>("opacity-0")
+
+    const mouseStop = () => {
+        setVidOpacity("opacity-100")
+        console.log("mouse is stopped!")
+        isMoving = false
+    }
+
+    const mouseMove = () => {
+        console.log("mouse is moving")
+        isMoving = true
+        setVidOpacity("opacity-0 pointer-events-none")
+        clearTimeout(timeout)
+
+        if (isMoving == true) {
+            timeout = setTimeout(mouseStop, 15000)
+        }
+    }
+
+    // Fetch Payload
     const payload: payloadProps = {
         init_images: [`data:image/png;base64,${imgbase64}`],
         include_init_images: true,
@@ -137,32 +163,12 @@ export default function Home() {
         }
     }
 
-    let timeout: any
-    let isMoving = false
-
-    const [vidOpacity, setVidOpacity] = useState<string>("opacity-100")
-
-    const mouseStop = () => {
-        setVidOpacity("opacity-100")
-        console.log("mouse is stopped!")
-        isMoving = false
-    }
-
-    const mouseMove = () => {
-        console.log("mouse is moving")
-        isMoving = true
-        setVidOpacity("opacity-0 pointer-events-none")
-        clearTimeout(timeout)
-
-        if (isMoving == true) {
-            timeout = setTimeout(mouseStop, 15000)
-        }
-    }
-
     return (
         <div onMouseMove={mouseMove} className="bg-slate-600">
             <video
                 autoPlay
+                muted
+                loop
                 src="/videos/screensaver_5.mp4"
                 className={`absolute h-screen object-cover ${vidOpacity} transition duration-700 ease-in-out`}
             />
