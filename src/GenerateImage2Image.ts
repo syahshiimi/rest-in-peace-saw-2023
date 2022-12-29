@@ -10,6 +10,13 @@ export interface payloadProps {
     prompt: string | undefined
 }
 
+const errorReload = (error: unknown) => {
+    if (error) {
+        alert(`Error: ${error}`)
+        window.location.reload()
+    }
+}
+
 export default function GenerateImage2Image(
     payload: payloadProps,
     setStableImage: Dispatch<SetStateAction<payloadProps>>
@@ -23,13 +30,8 @@ export default function GenerateImage2Image(
         body: JSON.stringify(payload),
     }
 
-    // if at serial.sg use this
-    //    fetch("http://192.168.1.140:7860/sdapi/v1/img2img", options)
-    //       .then((response) => response.json())
-    //      .then((response) => setStableImage(response))
-    //if at home use this
     fetch("http://127.0.0.1:7860/sdapi/v1/img2img", options)
         .then((response) => response.json())
         .then((response) => setStableImage(response))
-
+        .catch((error) => errorReload(error))
 }
