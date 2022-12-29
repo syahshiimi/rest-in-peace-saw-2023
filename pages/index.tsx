@@ -166,7 +166,7 @@ export default function Home() {
                 src="/videos/screensaver_5.mp4"
                 className={`absolute h-screen object-cover ${vidOpacity} transition duration-700 ease-in-out`}
             />
-            <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center dark:text-white  ">
+            <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center dark:text-white">
                 {setView()}
                 {/* <div className="pt-8">{basePrompt}</div> */}
             </div>
