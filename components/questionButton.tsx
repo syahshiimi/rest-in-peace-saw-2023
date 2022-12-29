@@ -35,17 +35,14 @@ const QuestionButton = ({
             null
         }
     }
-    const onClick = () => {
-        setBool()
-        setPrompt()
-        sendPostReq()
-    }
 
     return (
         <button
             className="flex max-w-xl flex-row items-center justify-center rounded-2xl bg-yellow-800 px-4 py-4 text-lg text-slate-300 
             shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:bg-yellow-500/80"
-            onClick={() => onClick()}
+            onClick={() => {
+                setBool(), setPrompt(), sendPostReq()
+            }}
         >
             {children}
         </button>
