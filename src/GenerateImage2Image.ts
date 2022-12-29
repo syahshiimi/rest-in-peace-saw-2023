@@ -1,5 +1,6 @@
 // import { type GenerateImage2ImageProps } from "../types/GenerateImage2ImageProps"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
+import ErrorModal from "../components/errorModal"
 
 export interface payloadProps {
     init_images: string[] | undefined
