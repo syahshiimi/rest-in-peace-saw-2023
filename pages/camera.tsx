@@ -16,7 +16,6 @@ const Camera = ({
     const webcamRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
     const imageRef = useRef<HTMLDivElement>(null)
-    const appendRef = useRef<HTMLDivElement>(null)
     const modalRef = useRef<HTMLDivElement>(null)
 
     const [isOpen, setIsOpen] = useState(false)
@@ -50,13 +49,13 @@ const Camera = ({
         removeContainer: true,
     }
 
-    const setAppendImage = () => {
-        html2canvas(imageRef.current, canvasImageConfig).then(function (
-            imageRef
-        ) {
-            appendRef.current.appendChild(imageRef)
-        })
-    }
+    // const setAppendImage = () => {
+    //     html2canvas(imageRef.current, canvasImageConfig).then(function (
+    //         imageRef
+    //     ) {
+    //         modalRef.current.appendChild(imageRef)
+    //     })
+    // }
     const setModalImage = () => {
         html2canvas(imageRef.current, canvasImageConfig).then(function (
             imageRef
@@ -65,15 +64,15 @@ const Camera = ({
         })
     }
 
-    const clearAppendImage = () => {
-        appendRef.current.removeChild(appendRef.current.firstChild)
-    }
+    // const clearAppendImage = () => {
+    //     modalRef.current.removeChild(modalRef.current.firstChild)
+    // }
 
     const saveImage = () => {
-        html2canvas(appendRef.current, canvasImageConfig).then(function (
-            appendRef
+        html2canvas(modalRef.current, canvasImageConfig).then(function (
+            modalRef
         ) {
-            saveAs(appendRef.toDataURL(), "new-image.png")
+            saveAs(modalRef.toDataURL(), "new-image.png")
         })
     }
 
@@ -203,10 +202,10 @@ const Camera = ({
                     />
                 </div>
 
-                <div className="flex grow flex-row items-end justify-center gap-6">
+                <div className="flex grow flex-row items-end justify-center gap-6 pb-12">
                     <button
                         type="button"
-                        className=" z-30 rounded-md bg-blue-500 px-3 py-2  font-semibold"
+                        className=" z-30 rounded-md bg-blue-500 px-3 py-2  text-2xl font-semibold hover:bg-blue-700"
                         onClick={() => {
                             window.location.reload()
                         }}
@@ -215,10 +214,10 @@ const Camera = ({
                     </button>
                     <button
                         type="button"
-                        className=" z-30 rounded-md bg-violet-500 px-3 py-2  font-semibold"
+                        className=" z-30 rounded-md bg-violet-500 px-3 py-2 text-2xl font-semibold hover:bg-violet-700"
                         onClick={() => {
                             setModalImage()
-                            setAppendImage()
+                            // setAppendImage()
                             setIsOpen(true)
                         }}
                     >
@@ -226,14 +225,11 @@ const Camera = ({
                     </button>
                 </div>
             </div>
-
-            <div ref={appendRef} className="" />
             <AlertModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 modalRef={modalRef}
                 saveImage={saveImage}
-                removeAppend={clearAppendImage}
             />
         </>
     )
