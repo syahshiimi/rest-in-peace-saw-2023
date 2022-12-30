@@ -20,6 +20,7 @@ const saveToSaved = (
     setIsDisabled: Dispatch<SetStateAction<boolean>>,
     setHasSaved: Dispatch<SetStateAction<boolean>>
 ) => {
+    setSaveString("...")
     setTimeout(() => {
         setIsDisabled(true)
         setSaveString("SAVED!")
@@ -39,7 +40,7 @@ const SaveImageLine = () => {
 const SaveImageLineSaved = () => {
     return (
         <Dialog.Description className="text-lg font-medium text-gray-800">
-            Proceed to the Gallery Sitter to get a digital copy of your image 💪🏾
+            Proceed to the receptionist to get a digital copy of your image 💪🏾
         </Dialog.Description>
     )
 }
@@ -55,7 +56,8 @@ const TryAgainLine = () => {
 const TryAgainLineSaved = () => {
     return (
         <Dialog.Description className="text-lg font-medium text-gray-800">
-            To try another pose 🙆🏼, click on the Try Again button.
+            To try another pose 🙆 click on the{" "}
+            <span className="text-rose-600">try again button</span>.
         </Dialog.Description>
     )
 }
@@ -84,7 +86,11 @@ const AlertModal = ({
         >
             <Dialog
                 onClose={() => {
-                    setIsOpen(false), removeAppend()
+                    setIsOpen(false),
+                        removeAppend(),
+                        setSaveString("SAVE IMAGE"),
+                        setIsDisabled(false),
+                        setHasSaved(false)
                 }}
                 className="fixed inset-0 z-50 flex items-end justify-center pb-28"
             >
@@ -94,21 +100,18 @@ const AlertModal = ({
                 />
                 <Dialog.Panel className="z-30 flex w-[600px]  flex-col items-center justify-center gap-3 rounded-xl bg-amber-600 px-6 py-4">
                     {hasSaved == false ? (
-                        <Dialog.Title className="pb-3 text-center text-4xl font-bold text-gray-800 ">
-                            Picture Preview
-                        </Dialog.Title>
-                    ) : (
-                        <Dialog.Title className="pb-3 text-center text-4xl font-bold text-gray-800 ">
-                            Picture Saved
-                        </Dialog.Title>
-                    )}
-                    {hasSaved == false ? (
                         <>
+                            <Dialog.Title className="pb-3 text-center text-4xl font-bold text-gray-800 ">
+                                Picture Preview
+                            </Dialog.Title>
                             <SaveImageLine />
                             <TryAgainLine />
                         </>
                     ) : (
                         <>
+                            <Dialog.Title className="pb-3 text-center text-4xl font-bold text-gray-800 ">
+                                Picture Saved
+                            </Dialog.Title>
                             <SaveImageLineSaved />
                             <TryAgainLineSaved />
                         </>
