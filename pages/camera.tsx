@@ -161,19 +161,11 @@ const Camera = ({
         loadModel()
     }, [handleDevices])
 
-    let countdown = 3
-    const [counter, setCounter] = useState<number>(3)
-    const [isCounting, setIsCounting] = useState<boolean>(false)
-
-    const timerClick = () => {
-        setCounter(counter + 1)
-    }
-
     return (
         <>
             <div className="flex min-h-screen min-w-fit flex-col items-center justify-end bg-black pb-4">
                 <div className="absolute top-[50%] left-[50%] z-50 -translate-x-[50%] -translate-y-[50%] text-[200px] text-slate-50">
-                    <p>{counter}</p>
+                    <p></p>
                 </div>
                 {devices.map((device, key) => {
                     return (
@@ -215,10 +207,9 @@ const Camera = ({
                         type="button"
                         className=" z-30 rounded-md bg-violet-500 px-3 py-2 text-2xl font-semibold hover:bg-violet-700"
                         onClick={() => {
-                            // setModalImage()
-                            // setIsOpen(true)
-                            // saveImage
-                            timerClick()
+                            setModalImage()
+                            setIsOpen(true)
+                            saveImage
                         }}
                     >
                         PREVIEW
