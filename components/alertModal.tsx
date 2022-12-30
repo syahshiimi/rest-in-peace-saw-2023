@@ -122,9 +122,7 @@ const AlertModal = ({
                     )}
                     <div className="flex w-full flex-row justify-between gap-8 pb-2 pt-3">
                         <button
-                            onClick={() => {
-                                exitModal()
-                            }}
+                            onClick={exitModal}
                             className="rounded-xl bg-rose-600 px-4 py-3 font-semibold shadow-md transition-all ease-in-out hover:-translate-y-1 hover:shadow-lg"
                         >
                             TRY AGAIN
