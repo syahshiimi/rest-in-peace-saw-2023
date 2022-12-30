@@ -1,6 +1,5 @@
 // import { type GenerateImage2ImageProps } from "../types/GenerateImage2ImageProps"
 import { Dispatch, SetStateAction, useState } from "react"
-import ErrorModal from "../components/errorModal"
 
 export interface payloadProps {
     init_images: string[] | undefined
@@ -13,7 +12,7 @@ export interface payloadProps {
 
 const errorReload = (error: unknown) => {
     if (error) {
-        alert(`Error: ${error}`)
+        // alert(`Error: ${error}`)
         window.location.reload()
     }
 }
