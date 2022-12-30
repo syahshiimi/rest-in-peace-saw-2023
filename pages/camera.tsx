@@ -49,13 +49,6 @@ const Camera = ({
         removeContainer: true,
     }
 
-    // const setAppendImage = () => {
-    //     html2canvas(imageRef.current, canvasImageConfig).then(function (
-    //         imageRef
-    //     ) {
-    //         modalRef.current.appendChild(imageRef)
-    //     })
-    // }
     const setModalImage = () => {
         html2canvas(imageRef.current, canvasImageConfig).then(function (
             imageRef
@@ -63,10 +56,6 @@ const Camera = ({
             modalRef.current.appendChild(imageRef)
         })
     }
-
-    // const clearAppendImage = () => {
-    //     modalRef.current.removeChild(modalRef.current.firstChild)
-    // }
 
     const saveImage = () => {
         html2canvas(modalRef.current, canvasImageConfig).then(function (
@@ -217,7 +206,6 @@ const Camera = ({
                         className=" z-30 rounded-md bg-violet-500 px-3 py-2 text-2xl font-semibold hover:bg-violet-700"
                         onClick={() => {
                             setModalImage()
-                            // setAppendImage()
                             setIsOpen(true)
                         }}
                     >
