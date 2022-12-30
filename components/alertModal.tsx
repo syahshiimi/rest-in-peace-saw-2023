@@ -18,13 +18,15 @@ interface IAlertModal {
 const saveToSaved = (
     setSaveString: Dispatch<SetStateAction<string>>,
     setIsDisabled: Dispatch<SetStateAction<boolean>>,
-    setHasSaved: Dispatch<SetStateAction<boolean>>
+    setHasSaved: Dispatch<SetStateAction<boolean>>,
+    saveImage: () => void
 ) => {
     setSaveString("...")
     setTimeout(() => {
         setIsDisabled(true)
         setSaveString("SAVED!")
         setHasSaved(true)
+        saveImage()
     }, 2000)
 }
 
@@ -67,11 +69,17 @@ const AlertModal = ({
     setIsOpen,
     modalRef,
     saveImage,
-    removeAppend,
 }: IAlertModal) => {
     const [saveString, setSaveString] = useState<string>("SAVE IMAGE")
     const [isDisabled, setIsDisabled] = useState<boolean>(false)
     const [hasSaved, setHasSaved] = useState<boolean>(false)
+
+    const exitModal = () => {
+        setIsOpen(false),
+            setSaveString("SAVE IMAGE"),
+            setIsDisabled(false),
+            setHasSaved(false)
+    }
 
     return (
         <Transition
@@ -86,11 +94,7 @@ const AlertModal = ({
         >
             <Dialog
                 onClose={() => {
-                    setIsOpen(false),
-                        removeAppend(),
-                        setSaveString("SAVE IMAGE"),
-                        setIsDisabled(false),
-                        setHasSaved(false)
+                    exitModal()
                 }}
                 className="fixed inset-0 z-50 flex items-end justify-center pb-28"
             >
@@ -119,11 +123,7 @@ const AlertModal = ({
                     <div className="flex w-full flex-row justify-between gap-8 pb-2 pt-3">
                         <button
                             onClick={() => {
-                                setIsOpen(false),
-                                    removeAppend(),
-                                    setSaveString("SAVE IMAGE"),
-                                    setIsDisabled(false),
-                                    setHasSaved(false)
+                                exitModal()
                             }}
                             className="rounded-xl bg-rose-600 px-4 py-3 font-semibold shadow-md transition-all ease-in-out hover:-translate-y-1 hover:shadow-lg"
                         >
@@ -134,7 +134,8 @@ const AlertModal = ({
                                 saveToSaved(
                                     setSaveString,
                                     setIsDisabled,
-                                    setHasSaved
+                                    setHasSaved,
+                                    saveImage
                                 )
                             }
                             disabled={isDisabled}
