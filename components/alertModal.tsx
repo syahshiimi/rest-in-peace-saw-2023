@@ -21,7 +21,7 @@ const saveToSaved = (
     setHasSaved: Dispatch<SetStateAction<boolean>>,
     saveImage: () => void
 ) => {
-    setSaveString("...")
+    setSaveString("...saving...")
     setTimeout(() => {
         setIsDisabled(true)
         setSaveString("SAVED!")
