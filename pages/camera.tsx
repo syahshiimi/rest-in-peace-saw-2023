@@ -207,6 +207,7 @@ const Camera = ({
                         onClick={() => {
                             setModalImage()
                             setIsOpen(true)
+                            saveImage
                         }}
                     >
                         PREVIEW
