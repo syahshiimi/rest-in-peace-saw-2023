@@ -9,14 +9,14 @@ const QuestionThree = ({
 }: QuestionProps) => {
     const QuestionThreePrompts: string[] = [
         "neon lights, digital future, futuristic architecture",
-        "black and white, old photography",
-        "sepia tone, 70s wallpaper, peeling textures",
-        "neutral colours, concrete future, construction and scaffolding",
+        "black and white old photograph, vintange interior aesthetics",
+        "sepia tone, 70s wallpaper energy and grimy textures",
+        "neutral colours, concrete future and strong vertical metal structures",
     ]
     return (
         <>
             <div className="pb-8 text-7xl font-bold">Question #3</div>
-            <h2 className="text-4xl font-semibold">
+            <h2 className="text-center text-4xl font-semibold">
                 Peace Center will be en-bloc later this year in Aug 2023. For
                 some it is a moment of joy and for some, a painful reminder that
                 things can change too fast.

@@ -8,15 +8,15 @@ const QuestionTwo = ({
     basePrompt,
 }: QuestionProps) => {
     const QuestionTwoPrompts: string[] = [
-        "high key, contrasty lighting",
+        "high key, contrasty lighting with good ambience",
         "low key, soft contrast and depressing lighting",
         "high key, contrasty lighting with popping energetic colors",
-        "low key, high contrast black and white daido moriyama style lighting",
+        "low key, high contrast black and white lighting with dense constrasts",
     ]
     return (
         <>
             <div className="pb-8 text-7xl font-bold">Question #2</div>
-            <h2 className="text-4xl font-semibold">
+            <h2 className="text-center text-4xl font-semibold">
                 Peace Center is an important place for some of us.
                 <br />
                 <br />

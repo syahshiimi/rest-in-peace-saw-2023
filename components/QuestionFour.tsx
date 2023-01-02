@@ -8,16 +8,16 @@ const QuestionFour = ({
     setBasePrompt,
 }: QuestionProps) => {
     const QuestionFourPrompts: string[] = [
-        "modern, lively, colourful",
-        "nostalgic, charming",
-        "peaceful, quiet, empty",
-        "optimistic, modern",
+        "modern, lively, colourful and forward-facing",
+        "nostalgic and charming with hints of quirkiness",
+        "peaceful and quiet atmosphere with a dreadful empty feeling",
+        "highly optimistic and modern aesthetics",
     ]
 
     return (
         <>
             <div className="pb-8 text-7xl font-bold">Question #4</div>
-            <h2 className="text-4xl font-semibold">
+            <h2 className="text-center text-4xl font-semibold">
                 Peace Center will soon make way for a new development and be in
                 line with the new presence of its vicinity.
                 <br />

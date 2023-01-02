@@ -9,15 +9,15 @@ const QuestionOne = ({
 }: QuestionProps) => {
     const QuestionOnePrompts: string[] = [
         "high resolution octane render of a busy brutalist mall",
-        "digital photographic image of a brutalist mall",
-        "film grain image of a vintage brutalist interior",
+        "high resolution photograph of a brutalist mall",
+        "low fidelity, grainy fiimic image of a vintage brutalist interior",
         "fading, black and white grainy portrayal of vintage interior",
     ]
 
     return (
         <>
             <div className="pb-8 text-7xl font-bold">Question #1</div>
-            <h2 className="text-4xl font-semibold">
+            <h2 className="text-center text-4xl font-semibold">
                 We’d like to know more about you before we begin.
                 <br />
                 <br />
@@ -31,7 +31,7 @@ const QuestionOne = ({
                         basePrompt={QuestionOnePrompts?.[0]}
                         setBasePrompt={setBasePrompt}
                     >
-                        I visit it frequently.
+                        I frequent Peace Center
                     </QuestionButton>
                     <QuestionButton
                         setIsClick={setIsClick}
@@ -39,7 +39,7 @@ const QuestionOne = ({
                         basePrompt={QuestionOnePrompts?.[1]}
                         setBasePrompt={setBasePrompt}
                     >
-                        I visit it occassionally.
+                        I occasionally visit Peace Center
                     </QuestionButton>
                     <QuestionButton
                         setIsClick={setIsClick}
@@ -47,7 +47,7 @@ const QuestionOne = ({
                         basePrompt={QuestionOnePrompts?.[2]}
                         setBasePrompt={setBasePrompt}
                     >
-                        I visit if I am nearby.
+                        I visit only if I am nearby.
                     </QuestionButton>
                     <QuestionButton
                         setIsClick={setIsClick}
@@ -55,7 +55,7 @@ const QuestionOne = ({
                         basePrompt={QuestionOnePrompts?.[3]}
                         setBasePrompt={setBasePrompt}
                     >
-                        I visit it rarely.
+                        I rarely visit Peace Center
                     </QuestionButton>
                 </div>
             </h2>
