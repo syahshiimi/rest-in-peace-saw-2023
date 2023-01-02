@@ -165,7 +165,7 @@ export default function Home() {
 
     return (
         <>
-            <div onMouseMove={mouseMove} className="bg-slate-600">
+            <div onMouseMove={mouseMove} className="bg-neutral-500">
                 <video
                     autoPlay
                     muted
