@@ -59,7 +59,7 @@ export default function Home() {
         clearTimeout(timeout)
 
         if (isMoving == true) {
-            timeout = setTimeout(mouseStop, 15000)
+            timeout = setTimeout(mouseStop, 1000)
         }
     }
 
@@ -170,7 +170,7 @@ export default function Home() {
                     autoPlay
                     muted
                     loop
-                    src="/videos/screensaver_5.mp4" // replace it with the correct one later
+                    src="/videos/screensaver.mp4" // replace it with the correct one later
                     className={`absolute h-screen object-cover ${vidOpacity}  transition duration-700 ease-in-out`}
                 />
                 <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center dark:text-white">
