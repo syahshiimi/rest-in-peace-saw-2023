@@ -61,7 +61,7 @@ const Camera = ({
         html2canvas(modalRef.current, canvasImageConfig).then(function (
             modalRef
         ) {
-            saveAs(modalRef.toDataURL(), "new-image.png")
+            saveAs(modalRef.toDataURL(), "/saw_rip_.png")
         })
     }
 
@@ -114,7 +114,7 @@ const Camera = ({
                 { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
                 { r: 0, g: 0, b: 0, a: 255 }, // background is black
                 undefined,
-                0.75 // min. probability to color a pixel as a foreground than backgorund
+                0.45 // min. probability to color a pixel as a foreground than backgorund
             )
             const opacity = 1
             const flipHorizontal = false
@@ -174,8 +174,8 @@ const Camera = ({
                             ref={webcamRef}
                             className=" invisible h-0 w-0"
                             videoConstraints={{
-                                width: 1920,
-                                height: 1080,
+                                width: 1080,
+                                height: 1920,
                                 deviceId: device.deviceId,
                             
                             }}
@@ -185,7 +185,7 @@ const Camera = ({
                 <div ref={imageRef} className="h-fit w-screen">
                     <canvas
                         ref={chromaRef}
-                        className="absolute left-[50%] top-[50%] z-20 max-h-full max-w-full -translate-y-[50%]  -translate-x-[50%] bg-transparent"
+                        className="absolute left-[50%] top-[50%] z-20 max-h-full max-w-full -translate-y-[50%] -translate-x-[50%] bg-transparent"
                     />
                     <img
                         alt="generated image"
