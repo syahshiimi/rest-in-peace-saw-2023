@@ -19,7 +19,8 @@ const saveToSaved = (
     setSaveString: Dispatch<SetStateAction<string>>,
     setIsDisabled: Dispatch<SetStateAction<boolean>>,
     setHasSaved: Dispatch<SetStateAction<boolean>>,
-    saveImage: () => void
+    saveImage: () => void,
+    setSavedModalBG: Dispatch<SetStateAction<string>>
 ) => {
     setSaveString("...saving...")
     setTimeout(() => {
@@ -27,6 +28,7 @@ const saveToSaved = (
         setSaveString("SAVED!")
         setHasSaved(true)
         saveImage()
+        setSavedModalBG("bg-amber-500")
     }, 2000)
 }
 
@@ -74,12 +76,14 @@ const AlertModal = ({
     const [saveString, setSaveString] = useState<string>("SAVE IMAGE")
     const [isDisabled, setIsDisabled] = useState<boolean>(false)
     const [hasSaved, setHasSaved] = useState<boolean>(false)
+    const [savedModalBG, setSavedModalBG] = useState<string>("bg-amber-600")
 
     const exitModal = () => {
         setIsOpen(false),
             setSaveString("SAVE IMAGE"),
             setIsDisabled(false),
-            setHasSaved(false)
+            setHasSaved(false),
+            setSavedModalBG("bg-amber-600"),
             removeAppend()
     }
 
@@ -104,7 +108,7 @@ const AlertModal = ({
                     className="fixed inset-0 bg-black/90 "
                     aria-hidden="true"
                 />
-                <Dialog.Panel className="z-30 flex w-[600px]  flex-col items-center justify-center gap-3 rounded-xl bg-amber-600 px-6 py-4">
+                <Dialog.Panel className={`z-30 flex w-[600px] flex-col items-center justify-center gap-3 rounded-xl ${savedModalBG} px-6 py-4`}>
                     {hasSaved == false ? (
                         <>
                             <Dialog.Title className="pb-3 text-center text-4xl font-bold text-gray-800 ">
@@ -135,7 +139,8 @@ const AlertModal = ({
                                     setSaveString,
                                     setIsDisabled,
                                     setHasSaved,
-                                    saveImage
+                                    saveImage,
+                                    setSavedModalBG
                                 )
                             }
                             disabled={isDisabled}
