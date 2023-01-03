@@ -24,6 +24,7 @@ export default function Home() {
     const [img, setimg] = useState<string>()
     const [isClick, setIsClick] = useState<string>("one")
     const [StableImage, setStableImage] = useState<any>() // fix this from any to correct type
+    const [screensaverOff, setScreensaverOff] = useState<string>("")
 
     // Prompts
     const [basePromptOne, setBasePromptOne] = useState<string>(
@@ -136,6 +137,9 @@ export default function Home() {
                 <QuestionButton
                     setIsClick={setIsClick}
                     isClick={"showImage"}
+                    screensaverOff={screensaverOff}
+                    setScreensaverOff={setScreensaverOff}
+                    
                     PostRequest={() =>
                         GenerateImage2Image(payload, setStableImage)
                     }
@@ -149,8 +153,8 @@ export default function Home() {
                     {!StableImage ? (
                         <Image
                             src={"/puff.svg"}
-                            width={520}
-                            height={520}
+                            width={720}
+                            height={720}
                             alt="puff svg"
                         />
                     ) : (
@@ -171,7 +175,7 @@ export default function Home() {
                     muted
                     loop
                     src="/videos/screensaver.mp4" // replace it with the correct one later
-                    className={`absolute h-screen object-cover ${vidOpacity}  transition duration-700 ease-in-out`}
+                    className={`absolute ${screensaverOff}  h-screen object-cover ${vidOpacity}  transition duration-700 ease-in-out`}
                 />
                 <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center dark:text-white">
                     {setView()}
