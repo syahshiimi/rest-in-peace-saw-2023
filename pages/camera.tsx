@@ -17,6 +17,8 @@ const Camera = ({
     const chromaRef = useRef<any>(null)
     const imageRef = useRef<HTMLDivElement>(null)
     const modalRef = useRef<HTMLDivElement>(null)
+    const appendRef = useRef<HTMLDivElement>(null)
+
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -42,27 +44,37 @@ const Camera = ({
     // set image size on canvas and later for saving
     const canvasImageConfig = {
         width: 1080,
-        height: 1920,
+        height: 1815,
         windowWidth: 1080,
         windowHHeight: 1920,
         backgroundColor: null,
         removeContainer: true,
     }
-    
+
+    const setAppendImage = () => {
+        html2canvas(imageRef.current, canvasImageConfig).then(function (
+            imageRef
+        ) {
+            appendRef.current.appendChild(imageRef)
+        })
+    }
+    const clearAppendImage = () => {
+        appendRef.current.removeChild(appendRef.current.firstChild)
+    }
 
     const setModalImage = () => {
         html2canvas(imageRef.current, canvasImageConfig).then(function (
-            imageRef    
+            imageRef
         ) {
             modalRef.current.appendChild(imageRef)
         })
     }
 
     const saveImage = () => {
-        html2canvas(modalRef.current, canvasImageConfig).then(function (
-            modalRef
+        html2canvas(appendRef.current, canvasImageConfig).then(function (
+            appendRef
         ) {
-            saveAs(modalRef.toDataURL(), "/saw_rip_.png")
+            saveAs(appendRef.toDataURL(), "/saw_rip_.png")
         })
     }
 
@@ -178,7 +190,7 @@ const Camera = ({
                                 width: 1080,
                                 height: 1920,
                                 deviceId: device.deviceId,
-                            
+
                             }}
                         />
                     )
@@ -210,6 +222,7 @@ const Camera = ({
                         className=" z-30 rounded-md bg-violet-500 px-3 py-2 text-2xl font-semibold hover:bg-violet-700"
                         onClick={() => {
                             setModalImage()
+                            setAppendImage()
                             setIsOpen(true)
                             saveImage
                         }}
@@ -218,11 +231,13 @@ const Camera = ({
                     </button>
                 </div>
             </div>
+            <div ref={appendRef} />
             <AlertModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 modalRef={modalRef}
                 saveImage={saveImage}
+                removeAppend={clearAppendImage}
             />
         </>
     )
