@@ -114,11 +114,11 @@ const Camera = ({
                 { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
                 { r: 0, g: 0, b: 0, a: 255 }, // background is black
                 undefined,
-                0.3 // min. probability to color a pixel as a foreground than backgorund
+                0.75 // min. probability to color a pixel as a foreground than backgorund
             )
             const opacity = 1
             const flipHorizontal = false
-            const maskBlurAmount = 0.225
+            const maskBlurAmount = 0.155
             await bodySegmentation.drawMask(
                 canvas, // pass canvas to draw
                 webcam, // feed video input
@@ -177,6 +177,7 @@ const Camera = ({
                                 width: 1920,
                                 height: 1080,
                                 deviceId: device.deviceId,
+                            
                             }}
                         />
                     )
@@ -184,7 +185,7 @@ const Camera = ({
                 <div ref={imageRef} className="h-fit w-screen">
                     <canvas
                         ref={chromaRef}
-                        className="absolute left-[50%] top-[50%] z-20 max-h-full max-w-full -translate-y-[50%]  -translate-x-[50%] rotate-90 scale-150 bg-transparent"
+                        className="absolute left-[50%] top-[50%] z-20 max-h-full max-w-full -translate-y-[50%]  -translate-x-[50%] bg-transparent"
                     />
                     <img
                         alt="generated image"
