@@ -11,7 +11,7 @@ interface QuestionButtonProps {
     setScreensaverOff: Dispatch<SetStateAction<string>> | undefined
 }
 
-const QuestionButton = ({
+const GenerateButton = ({
     children,
     isClick,
     setIsClick,
@@ -41,10 +41,10 @@ const QuestionButton = ({
     }
 
     const removeScreensaver = () => {
-        if (screensaverOff == "absolute hidden") {
+        if (screensaverOff == "hidden") {
             setScreensaverOff("")
         }  else if (screensaverOff == "") {
-            setScreensaverOff("absolute hidden")
+            setScreensaverOff("hidden")
         }
     }
 
@@ -63,4 +63,4 @@ const QuestionButton = ({
     )
 }
 
-export default QuestionButton
+export default GenerateButton

@@ -8,8 +8,8 @@ import QuestionOne from "../components/QuestionOne"
 import QuestionTwo from "../components/QuestionTwo"
 import QuestionThree from "../components/QuestionThree"
 import QuestionFour from "../components/QuestionFour"
-import QuestionButton from "../components/questionButton"
 import Camera from "./camera"
+import GenerateButton from "../components/questionButton"
 
 // Static Import Assets
 
@@ -134,7 +134,7 @@ export default function Home() {
             )
         } else if (isClick === "generate") {
             return (
-                <QuestionButton
+                <GenerateButton
                     setIsClick={setIsClick}
                     isClick={"showImage"}
                     screensaverOff={screensaverOff}
@@ -145,7 +145,7 @@ export default function Home() {
                     }
                 >
                     Generate!
-                </QuestionButton>
+                </GenerateButton>
             )
         } else if (isClick === "showImage") {
             return (
@@ -174,8 +174,8 @@ export default function Home() {
                     autoPlay
                     muted
                     loop
-                    src="/videos/screensaver.mp4" // replace it with the correct one later
-                    className={`absolute ${screensaverOff}  h-screen object-cover ${vidOpacity}  transition duration-700 ease-in-out`}
+                    src="/videos/screensaver_portrait.mp4" // replace it with the correct one later
+                    className={`absolute ${screensaverOff} h-screen object-cover ${vidOpacity}  transition duration-700 ease-in-out`}
                 />
                 <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center dark:text-white">
                     {setView()}
