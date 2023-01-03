@@ -31,6 +31,7 @@ const Camera = ({
         [setDevices]
     )
 
+    // save image function
     const saveAs = (uri: string, filename: string) => {
         const link = document.createElement("a")
         if (typeof link.download === "string") {
@@ -50,19 +51,23 @@ const Camera = ({
         removeContainer: true,
     }
 
+    // append image to div
     const setAppendImage = () => {
-        html2canvas(imageRef.current, canvasImageConfig).then(function (
+        html2canvas(imageRef.current, canvasImageConfig).then(function(
             imageRef
         ) {
             appendRef.current.appendChild(imageRef)
         })
     }
+
+    // clear appended image in div
     const clearAppendImage = () => {
         appendRef.current.removeChild(appendRef.current.firstChild)
     }
 
+    // append image to modal portal
     const setModalImage = () => {
-        html2canvas(imageRef.current, canvasImageConfig).then(function (
+        html2canvas(imageRef.current, canvasImageConfig).then(function(
             imageRef
         ) {
             modalRef.current.appendChild(imageRef)
@@ -70,13 +75,14 @@ const Camera = ({
     }
 
     const saveImage = () => {
-        html2canvas(appendRef.current, canvasImageConfig).then(function (
+        html2canvas(appendRef.current, canvasImageConfig).then(function(
             appendRef
         ) {
             saveAs(appendRef.toDataURL(), "/saw_rip_.png")
         })
     }
 
+    // load the tfjs model
     const loadModel = async () => {
         const segmenterConfig: any = {
             runtime: "mediapipe", // or 'tfjs'
@@ -98,6 +104,7 @@ const Camera = ({
         }, 1000 / 144)
     }
 
+    // chromakey model
     const chromaKey = async (segmenter: any) => {
         if (
             !typeof webcamRef.current !== undefined &&
