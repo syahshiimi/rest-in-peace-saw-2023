@@ -19,7 +19,6 @@ const Camera = ({
     const modalRef = useRef<HTMLDivElement>(null)
     const appendRef = useRef<HTMLDivElement>(null)
 
-
     const [isOpen, setIsOpen] = useState(false)
 
     const [devices, setDevices] = useState([])
@@ -127,11 +126,11 @@ const Camera = ({
                 { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
                 { r: 0, g: 0, b: 0, a: 255 }, // background is black
                 undefined,
-                0.45 // min. probability to color a pixel as a foreground than backgorund
+                0.75 // min. probability to color a pixel as a foreground than backgorund
             )
             const opacity = 1
             const flipHorizontal = false
-            const maskBlurAmount = 0.155
+            const maskBlurAmount = 0
             await bodySegmentation.drawMask(
                 canvas, // pass canvas to draw
                 webcam, // feed video input
@@ -190,7 +189,6 @@ const Camera = ({
                                 width: 1080,
                                 height: 1920,
                                 deviceId: device.deviceId,
-
                             }}
                         />
                     )
