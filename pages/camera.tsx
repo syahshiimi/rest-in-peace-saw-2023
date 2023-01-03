@@ -48,10 +48,11 @@ const Camera = ({
         backgroundColor: null,
         removeContainer: true,
     }
+    
 
     const setModalImage = () => {
         html2canvas(imageRef.current, canvasImageConfig).then(function (
-            imageRef
+            imageRef    
         ) {
             modalRef.current.appendChild(imageRef)
         })
