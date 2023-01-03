@@ -69,6 +69,7 @@ const AlertModal = ({
     setIsOpen,
     modalRef,
     saveImage,
+    removeAppend
 }: IAlertModal) => {
     const [saveString, setSaveString] = useState<string>("SAVE IMAGE")
     const [isDisabled, setIsDisabled] = useState<boolean>(false)
@@ -79,6 +80,7 @@ const AlertModal = ({
             setSaveString("SAVE IMAGE"),
             setIsDisabled(false),
             setHasSaved(false)
+            removeAppend()
     }
 
     return (
@@ -145,7 +147,7 @@ const AlertModal = ({
                 </Dialog.Panel>
                 <div
                     ref={modalRef}
-                    className="absolute left-[50%] top-[40%] z-10 h-full -translate-y-[50%] -translate-x-[50%] scale-75  "
+                    className="absolute left-[50%] top-[40%] z-10 h-full -translate-y-[50%] -translate-x-[50%] scale-75"
                 />
             </Dialog>
         </Transition>
