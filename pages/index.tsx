@@ -60,7 +60,7 @@ export default function Home() {
         clearTimeout(timeout)
 
         if (isMoving == true) {
-            timeout = setTimeout(mouseStop, 1000)
+            timeout = setTimeout(mouseStop, 15000)
         }
     }
 
@@ -139,7 +139,6 @@ export default function Home() {
                     isClick={"showImage"}
                     screensaverOff={screensaverOff}
                     setScreensaverOff={setScreensaverOff}
-                    
                     PostRequest={() =>
                         GenerateImage2Image(payload, setStableImage)
                     }
