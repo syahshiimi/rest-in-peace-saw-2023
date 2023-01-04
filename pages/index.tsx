@@ -60,7 +60,7 @@ export default function Home() {
         clearTimeout(timeout)
 
         if (isMoving == true) {
-            timeout = setTimeout(mouseStop, 15000)
+            timeout = setTimeout(mouseStop, 45000)
         }
     }
 
