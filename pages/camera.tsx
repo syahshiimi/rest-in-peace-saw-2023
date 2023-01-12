@@ -11,7 +11,7 @@ interface CameraProps {
 }
 
 const Camera = ({
-    getGenerateImage = "/testImages/test_image_2.png",
+    getGenerateImage = "/testImages/dblspace/dblspace_test_img.png",
 }: CameraProps) => {
     const webcamRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
@@ -53,7 +53,7 @@ const Camera = ({
 
     // append image to div
     const setAppendImage = () => {
-        html2canvas(imageRef.current, canvasImageConfig).then(function(
+        html2canvas(imageRef.current, canvasImageConfig).then(function (
             imageRef
         ) {
             appendRef.current.appendChild(imageRef)
@@ -67,7 +67,7 @@ const Camera = ({
 
     // append image to modal portal
     const setModalImage = () => {
-        html2canvas(imageRef.current, canvasImageConfig).then(function(
+        html2canvas(imageRef.current, canvasImageConfig).then(function (
             imageRef
         ) {
             modalRef.current.appendChild(imageRef)
@@ -75,7 +75,7 @@ const Camera = ({
     }
 
     const saveImage = () => {
-        html2canvas(appendRef.current, canvasImageConfig).then(function(
+        html2canvas(appendRef.current, canvasImageConfig).then(function (
             appendRef
         ) {
             saveAs(appendRef.toDataURL(), "/saw_rip_.png")
@@ -187,6 +187,7 @@ const Camera = ({
                     <p></p>
                 </div>
                 {devices.map((device, key) => {
+                    console.log(devices)
                     return (
                         <Webcam
                             key={devices[0].deviceId | key}
@@ -195,7 +196,7 @@ const Camera = ({
                             videoConstraints={{
                                 width: 1080,
                                 height: 1920,
-                                deviceId: device.deviceId,
+                                deviceId: devices[0].deviceId,
                             }}
                         />
                     )
@@ -211,39 +212,7 @@ const Camera = ({
                         className="absolute left-[50%] top-[50%] z-10 h-full w-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
                 </div>
-
-                <div className="flex grow flex-row items-end justify-center gap-6 pb-12">
-                    <button
-                        type="button"
-                        className=" z-30 rounded-md bg-blue-500 px-3 py-2  text-2xl font-semibold hover:bg-blue-700"
-                        onClick={() => {
-                            window.location.reload()
-                        }}
-                    >
-                        RESTART
-                    </button>
-                    <button
-                        type="button"
-                        className=" z-30 rounded-md bg-violet-500 px-3 py-2 text-2xl font-semibold hover:bg-violet-700"
-                        onClick={() => {
-                            setModalImage()
-                            setAppendImage()
-                            setIsOpen(true)
-                            saveImage
-                        }}
-                    >
-                        PREVIEW
-                    </button>
-                </div>
             </div>
-            <div ref={appendRef} />
-            <AlertModal
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                modalRef={modalRef}
-                saveImage={saveImage}
-                removeAppend={clearAppendImage}
-            />
         </>
     )
 }
