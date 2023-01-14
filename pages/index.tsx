@@ -1,186 +1,237 @@
-import { useEffect, useState } from "react"
-import Image from "next/image"
-import useSWR from "swr"
-import randomIntFromInterval from "../src/MinMaxGenerator"
-import GenerateImage2Image, { payloadProps } from "../src/GenerateImage2Image"
-
-import QuestionOne from "../components/QuestionOne"
-import QuestionTwo from "../components/QuestionTwo"
-import QuestionThree from "../components/QuestionThree"
-import QuestionFour from "../components/QuestionFour"
-import Camera from "./camera"
+import { useEffect, useRef, useState, useCallback } from "react"
+import Webcam from "react-webcam"
+import * as bodySegmentation from "@tensorflow-models/body-segmentation"
+import "@tensorflow/tfjs-core"
+import "@tensorflow/tfjs-backend-webgl"
+import html2canvas from "html2canvas"
+import AlertModal from "../components/alertModal"
 import GenerateButton from "../components/questionButton"
 
-// Static Import Assets
+interface CameraProps {
+    getGenerateImage: string | undefined
+}
 
-const getBase64StringFromDataURL = (dataURL: any) =>
-    dataURL.replace("data:", "").replace(/^.+,/, "")
+const Camera = ({
+    getGenerateImage = "/testImages/dblspace/dblspace_test_img.png",
+}: CameraProps) => {
+    const webcamRef = useRef<any>(null)
+    const chromaRef = useRef<any>(null)
+    const imageRef = useRef<HTMLDivElement>(null)
+    const modalRef = useRef<HTMLDivElement>(null)
+    const appendRef = useRef<HTMLDivElement>(null)
 
-const randomInt = randomIntFromInterval(0, 13)
+    const [isOpen, setIsOpen] = useState(false)
 
-export default function Home() {
-    // Images
-    const [imgbase64, setImgBase64] = useState<string>()
-    const [img, setimg] = useState<string>()
-    const [isClick, setIsClick] = useState<string>("one")
-    const [StableImage, setStableImage] = useState<any>() // fix this from any to correct type
-    const [screensaverOff, setScreensaverOff] = useState<string>("")
+    const [devices, setDevices] = useState([])
 
-    // Prompts
-    const [basePromptOne, setBasePromptOne] = useState<string>(
-        "faded and grainy wide angle shot of a vintage 80's interior"
+    const handleDevices = useCallback(
+        (mediaDevices: any) =>
+            setDevices(
+                mediaDevices.filter(({ kind }) => kind === "videoinput")
+            ),
+        [setDevices]
     )
 
-    const [basePromptTwo, setBasePromptTwo] = useState<string>("futuristic")
-
-    const [basePromptThree, setBasePromptThree] = useState<string>(
-        "soft and dreamy lighting"
-    )
-    const [basePromptFour, setBasePromptFour] =
-        useState<string>("wong-kar wai vibe")
-
-    const basePrompt = `${basePromptOne}, ${basePromptTwo}, ${basePromptThree}, ${basePromptFour}, `
-
-    // Mouseover Screensaver
-    let timeout: ReturnType<typeof setTimeout>
-    let isMoving = false
-
-    const [vidOpacity, setVidOpacity] = useState<string>("opacity-0")
-
-    const mouseStop = () => {
-        setVidOpacity("opacity-100")
-        console.log("mouse is stopped!")
-        isMoving = false
-    }
-
-    const mouseMove = () => {
-        console.log("mouse is moving")
-        isMoving = true
-        setVidOpacity("opacity-0 pointer-events-none")
-        clearTimeout(timeout)
-
-        if (isMoving == true) {
-            timeout = setTimeout(mouseStop, 45000)
+    // save image function
+    const saveAs = (uri: string, filename: string) => {
+        const link = document.createElement("a")
+        if (typeof link.download === "string") {
+            link.href = uri
+            link.download = filename
+            link.click()
         }
     }
 
-    // Fetch Payload
+    // set image size on canvas and later for saving
+    const canvasImageConfig = {
+        width: 1080,
+        height: 1815,
+        windowWidth: 1080,
+        windowHHeight: 1920,
+        backgroundColor: null,
+        removeContainer: true,
+    }
+
     const payload: payloadProps = {
-        init_images: [`data:image/png;base64,${imgbase64}`],
+        // init_images: [`data:image/png;base64,${imgbase64}`],
         include_init_images: true,
         denoising_strength: 0.55,
         steps: 20,
         cfg_scale: 25,
-        prompt: basePrompt,
+        // prompt: basePrompt,
     }
 
-    const fetcher = (url: RequestInfo | URL) =>
-        fetch(url).then((res) => res.json())
+    // append image to div
+    const setAppendImage = () => {
+        html2canvas(imageRef.current, canvasImageConfig).then(function (
+            imageRef
+        ) {
+            appendRef.current.appendChild(imageRef)
+        })
+    }
 
-    const { data, error } = useSWR("api/getimageblob", fetcher, {})
+    // clear appended image in div
+    const clearAppendImage = () => {
+        appendRef.current.removeChild(appendRef.current.firstChild)
+    }
+
+    // append image to modal portal
+    const setModalImage = () => {
+        html2canvas(imageRef.current, canvasImageConfig).then(function (
+            imageRef
+        ) {
+            modalRef.current.appendChild(imageRef)
+        })
+    }
+
+    const saveImage = () => {
+        html2canvas(appendRef.current, canvasImageConfig).then(function (
+            appendRef
+        ) {
+            saveAs(appendRef.toDataURL(), "/saw_rip_.png")
+        })
+    }
+
+    // load the tfjs model
+    const loadModel = async () => {
+        const segmenterConfig: any = {
+            runtime: "mediapipe", // or 'tfjs'
+            solutionPath: "/selfie_segmentation",
+            modelType: "general",
+        }
+
+        // load model
+        const model =
+            bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation
+        // create Segmenter
+        const segmenter = await bodySegmentation.createSegmenter(
+            model,
+            segmenterConfig
+        )
+
+        setInterval(() => {
+            chromaKey(segmenter)
+        }, 1000 / 144)
+    }
+
+    // chromakey model
+    const chromaKey = async (segmenter: any) => {
+        if (
+            !typeof webcamRef.current !== undefined &&
+            webcamRef.current !== null &&
+            webcamRef.current.video.readyState == 4
+        ) {
+            const webcam = webcamRef.current.video
+            const canvas = chromaRef.current
+
+            // Set Constants based on Webcam Video
+            const videoHeight = webcam.videoHeight
+            const videoWidth = webcam.videoWidth
+
+            // set video dimensions
+            webcamRef.current.video.width = videoWidth
+            webcamRef.current.video.height = videoHeight
+
+            // Set chromakey canvas dimensions
+            chromaRef.current.height = videoHeight
+            chromaRef.current.width = videoWidth
+
+            // Make segmentations
+            const person = await segmenter.segmentPeople(webcam)
+            const coloredPartImage = await bodySegmentation.toBinaryMask(
+                person,
+                { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
+                { r: 0, g: 0, b: 0, a: 255 }, // background is black
+                undefined,
+                0.95 // min. probability to color a pixel as a foreground than backgorund
+            )
+            const opacity = 1
+            const flipHorizontal = false
+            const maskBlurAmount = 0
+            await bodySegmentation.drawMask(
+                canvas, // pass canvas to draw
+                webcam, // feed video input
+                coloredPartImage,
+                opacity,
+                maskBlurAmount,
+                flipHorizontal
+            )
+
+            // Create context to manipulate RGB Values
+            const context = canvas.getContext("2d")
+
+            // Get frame data from canvas context
+            const frame = context.getImageData(
+                0,
+                0,
+                canvas.width,
+                canvas.height,
+                { willReadFrequently: true }
+            )
+            const data = frame.data
+
+            // Remove Black Pixels
+            for (let i = 0; i < data.length; i += 4) {
+                const red = data[i + 0]
+                const green = data[i + 1]
+                const blue = data[i + 2]
+                if (green == 0 && red == 0 && blue == 0) {
+                    data[i + 3] = 0
+                }
+            }
+
+            // Draw pixels to canvas context
+            context.putImageData(frame, 0, 0)
+        }
+    }
 
     useEffect(() => {
-        setimg(data?.[randomInt])
-        if (img != undefined) {
-            fetch(img)
-                .then((res) => res.blob())
-                .then((blob) => {
-                    const reader = new FileReader()
-                    reader.onloadend = () => {
-                        const base64 = getBase64StringFromDataURL(reader.result)
-                        setImgBase64(base64)
-                    }
-                    reader.readAsDataURL(blob)
-                })
-        }
-    }, [img, imgbase64, data, error])
-
-    const setView = () => {
-        if (isClick == "one") {
-            return (
-                <QuestionOne
-                    isClick={"two"}
-                    setIsClick={setIsClick}
-                    basePrompt={basePromptOne}
-                    setBasePrompt={setBasePromptOne}
-                />
-            )
-        } else if (isClick == "two") {
-            return (
-                <QuestionTwo
-                    isClick={"three"}
-                    setIsClick={setIsClick}
-                    basePrompt={basePromptTwo}
-                    setBasePrompt={setBasePromptTwo}
-                />
-            )
-        } else if (isClick == "three") {
-            return (
-                <QuestionThree
-                    isClick={"four"}
-                    setIsClick={setIsClick}
-                    basePrompt={basePromptThree}
-                    setBasePrompt={setBasePromptThree}
-                />
-            )
-        } else if (isClick === "four") {
-            return (
-                <QuestionFour
-                    isClick={"generate"}
-                    setIsClick={setIsClick}
-                    basePrompt={basePromptFour}
-                    setBasePrompt={setBasePromptFour}
-                />
-            )
-        } else if (isClick === "generate") {
-            return (
-                <GenerateButton
-                    setIsClick={setIsClick}
-                    isClick={"showImage"}
-                    screensaverOff={screensaverOff}
-                    setScreensaverOff={setScreensaverOff}
-                    PostRequest={() =>
-                        GenerateImage2Image(payload, setStableImage)
-                    }
-                >
-                    Generate!
-                </GenerateButton>
-            )
-        } else if (isClick === "showImage") {
-            return (
-                <>
-                    {!StableImage ? (
-                        <Image
-                            src={"/puff.svg"}
-                            width={720}
-                            height={720}
-                            alt="puff svg"
-                        />
-                    ) : (
-                        <Camera
-                            getGenerateImage={`data:image/png;base64, ${StableImage?.images}`}
-                        />
-                    )}
-                </>
-            )
-        }
-    }
+        navigator.mediaDevices.enumerateDevices().then(handleDevices)
+        loadModel()
+    }, [handleDevices])
 
     return (
         <>
-            <div onMouseMove={mouseMove} className="bg-neutral-500">
-                <video
-                    autoPlay
-                    muted
-                    loop
-                    src="/videos/screensaver_portrait.mp4" // replace it with the correct one later
-                    className={`absolute ${screensaverOff} h-screen object-cover ${vidOpacity}  transition duration-700 ease-in-out`}
-                />
-                <div className="container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center dark:text-white">
-                    {setView()}
-                    {/* <div className="pt-8">{basePrompt}</div> */}
+            <div className="flex min-h-screen min-w-fit flex-col items-center justify-end bg-black pb-4">
+                <div className="absolute top-[50%] left-[50%] z-50 -translate-x-[50%] -translate-y-[50%] text-[200px] text-slate-50">
+                    <p></p>
+                </div>
+                {devices.map((device, key) => {
+                    console.log(devices)
+                    return (
+                        <Webcam
+                            key={devices[0].deviceId | key}
+                            ref={webcamRef}
+                            className=" invisible h-0 w-0"
+                            videoConstraints={{
+                                width: 1080,
+                                height: 1920,
+                                deviceId: devices[0].deviceId,
+                            }}
+                        />
+                    )
+                })}
+                <div ref={imageRef} className="h-fit w-screen">
+                    <canvas
+                        ref={chromaRef}
+                        className="absolute left-[50%] top-[50%] z-20 max-h-full max-w-full -translate-y-[50%] -translate-x-[50%] bg-transparent"
+                    />
+                    <img
+                        alt="generated image"
+                        src={getGenerateImage}
+                        className="absolute left-[50%] top-[50%] z-10 h-full  -translate-y-[50%] -translate-x-[50%]  bg-transparent"
+                    />
+                </div>
+                <div
+                    className="absolute left-[10%]"
+                    onClick={() => setIsOpen(true)}
+                >
+                    <GenerateButton>Generate!</GenerateButton>
                 </div>
             </div>
+            <AlertModal isOpen={isOpen} setIsOpen={setIsOpen} />
         </>
     )
 }
+
+export default Camera

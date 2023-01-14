@@ -133,7 +133,7 @@ const Camera = ({
                 { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
                 { r: 0, g: 0, b: 0, a: 255 }, // background is black
                 undefined,
-                0.75 // min. probability to color a pixel as a foreground than backgorund
+                0.95 // min. probability to color a pixel as a foreground than backgorund
             )
             const opacity = 1
             const flipHorizontal = false
@@ -209,7 +209,7 @@ const Camera = ({
                     <img
                         alt="generated image"
                         src={getGenerateImage}
-                        className="absolute left-[50%] top-[50%] z-10 h-full w-screen -translate-y-[50%] -translate-x-[50%]  bg-transparent"
+                        className="absolute left-[50%] top-[50%] z-10 h-full  -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
                 </div>
             </div>
