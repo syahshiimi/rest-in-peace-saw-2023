@@ -1,4 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react"
+import { useForm } from "react-hook-form"
 import {
     Dispatch,
     SetStateAction,
@@ -9,9 +10,9 @@ import {
 
 interface IAlertModal {
     isOpen: boolean | undefined
-    setIsOpen: Dispatch<SetStateAction<boolean>>
-    modalRef: MutableRefObject<HTMLDivElement>
-    saveImage: () => void
+    setIsOpen?: Dispatch<SetStateAction<boolean>>
+    modalRef?: MutableRefObject<HTMLDivElement>
+    saveImage?: () => void
     removeAppend?: () => void
 }
 
@@ -71,7 +72,7 @@ const AlertModal = ({
     setIsOpen,
     modalRef,
     saveImage,
-    removeAppend
+    removeAppend,
 }: IAlertModal) => {
     const [saveString, setSaveString] = useState<string>("SAVE IMAGE")
     const [isDisabled, setIsDisabled] = useState<boolean>(false)
@@ -79,13 +80,21 @@ const AlertModal = ({
     const [savedModalBG, setSavedModalBG] = useState<string>("bg-amber-600")
 
     const exitModal = () => {
-        setIsOpen(false),
-            setSaveString("SAVE IMAGE"),
-            setIsDisabled(false),
-            setHasSaved(false),
-            setSavedModalBG("bg-amber-600"),
-            removeAppend()
+        setIsOpen(false)
+        // setSaveString("SAVE IMAGE"),
+        // setIsDisabled(false),
+        // setHasSaved(false),
+        // setSavedModalBG("bg-amber-600"),
+        // removeAppend()
     }
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm()
+    const onSubmit = (data) => console.log(data)
 
     return (
         <Transition
@@ -108,52 +117,9 @@ const AlertModal = ({
                     className="fixed inset-0 bg-black/90 "
                     aria-hidden="true"
                 />
-                <Dialog.Panel className={`z-30 flex w-[600px] flex-col items-center justify-center gap-3 rounded-xl ${savedModalBG} px-6 py-4`}>
-                    {hasSaved == false ? (
-                        <>
-                            <Dialog.Title className="pb-3 text-center text-4xl font-bold text-gray-800 ">
-                                Picture Preview
-                            </Dialog.Title>
-                            <SaveImageLine />
-                            <TryAgainLine />
-                        </>
-                    ) : (
-                        <>
-                            <Dialog.Title className="pb-3 text-center text-4xl font-bold text-gray-800 ">
-                                Picture Saved
-                            </Dialog.Title>
-                            <SaveImageLineSaved />
-                            <TryAgainLineSaved />
-                        </>
-                    )}
-                    <div className="flex w-full flex-row justify-between gap-8 pb-2 pt-3">
-                        <button
-                            onClick={exitModal}
-                            className="rounded-xl bg-rose-600 px-4 py-3 font-semibold shadow-md transition-all ease-in-out hover:-translate-y-1 hover:shadow-lg"
-                        >
-                            TRY AGAIN
-                        </button>
-                        <button
-                            onClick={() =>
-                                saveToSaved(
-                                    setSaveString,
-                                    setIsDisabled,
-                                    setHasSaved,
-                                    saveImage,
-                                    setSavedModalBG
-                                )
-                            }
-                            disabled={isDisabled}
-                            className="rounded-xl bg-green-600 px-4 py-3 font-semibold shadow-md transition-all ease-in-out hover:-translate-y-1 hover:shadow-lg disabled:pointer-events-none disabled:opacity-50"
-                        >
-                            {saveString}
-                        </button>
-                    </div>
-                </Dialog.Panel>
-                <div
-                    ref={modalRef}
-                    className="absolute left-[50%] top-[40%] z-10 h-full -translate-y-[50%] -translate-x-[50%] scale-75"
-                />
+                <Dialog.Panel
+                    className={`z-30 flex w-[600px] flex-col items-center justify-center gap-3 rounded-xl ${savedModalBG} px-6 py-4`}
+                ></Dialog.Panel>
             </Dialog>
         </Transition>
     )

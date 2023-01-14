@@ -7,8 +7,8 @@ interface QuestionButtonProps {
     setIsClick?: Dispatch<SetStateAction<string>> | undefined
     setBasePrompt?: Dispatch<SetStateAction<string>> | undefined
     PostRequest?: () => void
-    screensaverOff: string | undefined
-    setScreensaverOff: Dispatch<SetStateAction<string>> | undefined
+    screensaverOff?: string | undefined
+    setScreensaverOff?: Dispatch<SetStateAction<string>> | undefined
 }
 
 const GenerateButton = ({
@@ -19,7 +19,7 @@ const GenerateButton = ({
     setBasePrompt,
     PostRequest,
     screensaverOff,
-    setScreensaverOff
+    setScreensaverOff,
 }: QuestionButtonProps) => {
     const setBool = () => {
         if (isClick && setIsClick != undefined) {
@@ -43,12 +43,10 @@ const GenerateButton = ({
     const removeScreensaver = () => {
         if (screensaverOff == "hidden") {
             setScreensaverOff("")
-        }  else if (screensaverOff == "") {
+        } else if (screensaverOff == "") {
             setScreensaverOff("hidden")
         }
     }
-
-
 
     return (
         <button
