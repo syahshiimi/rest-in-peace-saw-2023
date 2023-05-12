@@ -1,0 +1,6 @@
+@mixin sizeGrid($property, $columns, $gutter) {
+  #{$property}: grid($columns, $gutter);
+  @media (min-width: $maxWidthPx) {
+    #{$property}: gridL($columns, $gutter);
+  }
+}

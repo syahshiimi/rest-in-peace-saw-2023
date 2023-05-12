@@ -1,0 +1,16 @@
+.grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  &.isSmall {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  @include above(large) {
+  }
+  @include below(small) {
+    grid-template-columns: 1fr;
+    &.isSmall {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}

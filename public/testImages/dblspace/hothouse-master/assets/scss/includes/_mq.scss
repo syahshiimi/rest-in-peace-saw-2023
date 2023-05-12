@@ -1,0 +1,31 @@
+$breakpoints: (
+  'mobile': 570px,
+  'tablet-small': 800px,
+  'tablet': 1080px,
+  'small': 1280px,
+  'medium': 1480px,
+  'medium-lg': 1780px,
+  'large': $maxWidthPx
+);
+@mixin below($breakpoint) {
+  $value: map-get($breakpoints, $breakpoint);
+  @if $value != null {
+    @media (max-width: $value) {
+      @content;
+    }
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Please make sure it is defined in `$breakpoints` map.";
+  }
+}
+@mixin above($breakpoint) {
+  $value: map-get($breakpoints, $breakpoint);
+  @if $value != null {
+    @media (min-width: $value) {
+      @content;
+    }
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Please make sure it is defined in `$breakpoints` map.";
+  }
+}

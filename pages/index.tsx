@@ -12,13 +12,11 @@ interface CameraProps {
 }
 
 const Camera = ({
-    getGenerateImage = "/testImages/dblspace/dblspace_test_img.png",
+    getGenerateImage = "/testImages/dblspace/image36.png",
 }: CameraProps) => {
     const webcamRef = useRef<any>(null)
     const chromaRef = useRef<any>(null)
     const imageRef = useRef<HTMLDivElement>(null)
-    const modalRef = useRef<HTMLDivElement>(null)
-    const appendRef = useRef<HTMLDivElement>(null)
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -32,26 +30,6 @@ const Camera = ({
         [setDevices]
     )
 
-    // save image function
-    const saveAs = (uri: string, filename: string) => {
-        const link = document.createElement("a")
-        if (typeof link.download === "string") {
-            link.href = uri
-            link.download = filename
-            link.click()
-        }
-    }
-
-    // set image size on canvas and later for saving
-    const canvasImageConfig = {
-        width: 1080,
-        height: 1815,
-        windowWidth: 1080,
-        windowHHeight: 1920,
-        backgroundColor: null,
-        removeContainer: true,
-    }
-
     const payload: payloadProps = {
         // init_images: [`data:image/png;base64,${imgbase64}`],
         include_init_images: true,
@@ -59,37 +37,6 @@ const Camera = ({
         steps: 20,
         cfg_scale: 25,
         // prompt: basePrompt,
-    }
-
-    // append image to div
-    const setAppendImage = () => {
-        html2canvas(imageRef.current, canvasImageConfig).then(function (
-            imageRef
-        ) {
-            appendRef.current.appendChild(imageRef)
-        })
-    }
-
-    // clear appended image in div
-    const clearAppendImage = () => {
-        appendRef.current.removeChild(appendRef.current.firstChild)
-    }
-
-    // append image to modal portal
-    const setModalImage = () => {
-        html2canvas(imageRef.current, canvasImageConfig).then(function (
-            imageRef
-        ) {
-            modalRef.current.appendChild(imageRef)
-        })
-    }
-
-    const saveImage = () => {
-        html2canvas(appendRef.current, canvasImageConfig).then(function (
-            appendRef
-        ) {
-            saveAs(appendRef.toDataURL(), "/saw_rip_.png")
-        })
     }
 
     // load the tfjs model
@@ -143,7 +90,7 @@ const Camera = ({
                 { r: 0, g: 0, b: 0, a: 0 }, // foreground color is white
                 { r: 0, g: 0, b: 0, a: 255 }, // background is black
                 undefined,
-                0.95 // min. probability to color a pixel as a foreground than backgorund
+                0.1 // min. probability to color a pixel as a foreground than backgorund
             )
             const opacity = 1
             const flipHorizontal = false
@@ -200,13 +147,13 @@ const Camera = ({
                     console.log(devices)
                     return (
                         <Webcam
-                            key={devices[0].deviceId | key}
+                            key={devices[1].deviceId | key}
                             ref={webcamRef}
-                            className=" invisible h-0 w-0"
+                            className=" invisible h-0 w-0 "
                             videoConstraints={{
                                 width: 1080,
                                 height: 1920,
-                                deviceId: devices[0].deviceId,
+                                deviceId: devices[1].deviceId,
                             }}
                         />
                     )
@@ -214,7 +161,7 @@ const Camera = ({
                 <div ref={imageRef} className="h-fit w-screen">
                     <canvas
                         ref={chromaRef}
-                        className="absolute left-[50%] top-[50%] z-20 max-h-full max-w-full -translate-y-[50%] -translate-x-[50%] bg-transparent"
+                        className="absolute left-[50%] top-[50%] z-20 max-h-full max-w-full -translate-y-[50%] -translate-x-[50%] rotate-90 bg-transparent"
                     />
                     <img
                         alt="generated image"
@@ -222,14 +169,14 @@ const Camera = ({
                         className="absolute left-[50%] top-[50%] z-10 h-full  -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
                 </div>
-                <div
-                    className="absolute left-[10%]"
-                    onClick={() => setIsOpen(true)}
-                >
-                    <GenerateButton>Generate!</GenerateButton>
-                </div>
+                {/* <div */}
+                {/*     className="absolute left-[10%]" */}
+                {/*     onClick={() => setIsOpen(true)} */}
+                {/* > */}
+                {/*     <GenerateButton>Generate!</GenerateButton> */}
+                {/* </div> */}
             </div>
-            <AlertModal isOpen={isOpen} setIsOpen={setIsOpen} />
+            {/* <AlertModal isOpen={isOpen} setIsOpen={setIsOpen} /> */}
         </>
     )
 }

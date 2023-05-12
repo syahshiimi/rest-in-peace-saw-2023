@@ -1,0 +1,16 @@
+.c {
+  height: 100%;
+  margin: 0 auto;
+  max-width: $maxWidthPx;
+  padding: 0 $pageMargin;
+  position: relative;
+  width: 100vw;
+  @include above(large) {
+    padding: 0 $spacingPageL;
+  }
+  @include below(small) {
+    width: 100vw - $spacingPageS * 2;
+    margin: 0 auto;
+    padding: 0;
+  }
+}

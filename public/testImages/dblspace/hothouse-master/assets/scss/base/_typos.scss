@@ -1,0 +1,87 @@
+$body: 16px;
+$bodySmall: 16px;
+$bodyTablet: 16px;
+
+html {
+  color: $black;
+  font-family: 'SF', 'Helvetica', 'Arial', sans-serif;
+  font-size: $body;
+  font-weight: $normal;
+  line-height: 1.15;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+h1,
+.h1 {
+  display: block;
+  // font-size: vw(36);
+  font-weight: $light;
+  line-height: 1.1;
+}
+h2,
+.h2 {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+// small,
+// .small {
+//   font-size: vw(12);
+// }
+// .big {
+//   font-size: vw(20);
+// }
+.upper {
+  text-transform: uppercase;
+}
+p {
+  line-height: 1.2;
+}
+p + p {
+  margin-top: 1.1em;
+}
+
+@include below(small) {
+  html {
+    font-size: $bodySmall;
+  }
+
+  h2,
+  .h2 {
+    // font-size: 24px;
+  }
+}
+@include below('tablet') {
+  html {
+    font-size: $bodyTablet;
+  }
+  h2 {
+    // font-size: 20px;
+  }
+}
+@include below('tablet-small') {
+  html {
+    font-size: 15px;
+  }
+}
+
+@include above(large) {
+  html {
+    // font-size: vwL(16);
+  }
+  h1,
+  .h1 {
+    // font-size: vwL(36);
+  }
+
+  small,
+  .small {
+    font-size: vwL(12);
+  }
+
+  .big {
+    font-size: vwL(20);
+  }
+}

@@ -1,0 +1,33 @@
+@function grid($unit, $addGutter) {
+  $result: $unit *
+    (
+      (100vw - ($spacingPage * 2) - ($gutter * ($desktopColumns - 1))) /
+        $desktopColumns
+    ) + $gutter * ($unit - 1);
+  @if $addGutter {
+    $result: $result + $gutter;
+  }
+  @return $result;
+}
+@function gridL($unit, $addGutter) {
+  $result: $unit *
+    (
+      ($maxWidth - ($spacingPageL * 2) - ($gutterL * ($desktopColumns - 1))) /
+        $desktopColumns
+    ) + $gutterL * ($unit - 1);
+  @if $addGutter {
+    $result: $result + $gutterL;
+  }
+  @return round($result);
+}
+@function gridS($unit, $addGutter) {
+  $result: $unit *
+    (
+      (100vw - ($spacingPageS * 2) - ($gutterS * ($mobileColumns - 1))) /
+        $mobileColumns
+    ) + $gutterS * ($unit - 1);
+  @if $addGutter {
+    $result: $result + $gutterS;
+  }
+  @return $result;
+}

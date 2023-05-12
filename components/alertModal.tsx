@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react"
-import { useForm } from "react-hook-form"
+import { useForm, SubmitHandler } from "react-hook-form"
 import {
     Dispatch,
     SetStateAction,
@@ -16,55 +16,9 @@ interface IAlertModal {
     removeAppend?: () => void
 }
 
-const saveToSaved = (
-    setSaveString: Dispatch<SetStateAction<string>>,
-    setIsDisabled: Dispatch<SetStateAction<boolean>>,
-    setHasSaved: Dispatch<SetStateAction<boolean>>,
-    saveImage: () => void,
-    setSavedModalBG: Dispatch<SetStateAction<string>>
-) => {
-    setSaveString("...saving...")
-    setTimeout(() => {
-        setIsDisabled(true)
-        setSaveString("SAVED!")
-        setHasSaved(true)
-        saveImage()
-        setSavedModalBG("bg-amber-500")
-    }, 2000)
-}
-
-const SaveImageLine = () => {
-    return (
-        <Dialog.Description className="text-lg font-medium text-gray-800">
-            To save your image, press the{" "}
-            <span className="text-green-600">save</span> button 💪🏾
-        </Dialog.Description>
-    )
-}
-
-const SaveImageLineSaved = () => {
-    return (
-        <Dialog.Description className="text-lg font-medium text-gray-800">
-            Proceed to the receptionist to get a digital copy of your image 💪🏾
-        </Dialog.Description>
-    )
-}
-
-const TryAgainLine = () => {
-    return (
-        <Dialog.Description className="text-lg font-medium text-gray-800">
-            Don't like your pose? 😢 Click on try again 😍
-        </Dialog.Description>
-    )
-}
-
-const TryAgainLineSaved = () => {
-    return (
-        <Dialog.Description className="text-lg font-medium text-gray-800">
-            To try another pose 🙆 click on the{" "}
-            <span className="text-rose-600">try again button</span>.
-        </Dialog.Description>
-    )
+type Inputs = {
+    text: string
+    textPrompt: string
 }
 
 const AlertModal = ({
@@ -74,11 +28,6 @@ const AlertModal = ({
     saveImage,
     removeAppend,
 }: IAlertModal) => {
-    const [saveString, setSaveString] = useState<string>("SAVE IMAGE")
-    const [isDisabled, setIsDisabled] = useState<boolean>(false)
-    const [hasSaved, setHasSaved] = useState<boolean>(false)
-    const [savedModalBG, setSavedModalBG] = useState<string>("bg-amber-600")
-
     const exitModal = () => {
         setIsOpen(false)
         // setSaveString("SAVE IMAGE"),
@@ -87,14 +36,13 @@ const AlertModal = ({
         // setSavedModalBG("bg-amber-600"),
         // removeAppend()
     }
-
     const {
         register,
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm()
-    const onSubmit = (data) => console.log(data)
+    } = useForm<Inputs>()
+    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
 
     return (
         <Transition
@@ -118,8 +66,25 @@ const AlertModal = ({
                     aria-hidden="true"
                 />
                 <Dialog.Panel
-                    className={`z-30 flex w-[600px] flex-col items-center justify-center gap-3 rounded-xl ${savedModalBG} px-6 py-4`}
-                ></Dialog.Panel>
+                    className={`z-30 flex w-[600px] flex-col items-center justify-center gap-3 rounded-xl bg-blue-500  px-6 py-4`}
+                >
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="flex flex-row gap-8"
+                    >
+                        {/* include validation with required or other standard HTML validation rules */}
+                        <input
+                            {...register("textPrompt", { required: true })}
+                            className="w-96 "
+                        />
+                        {/* errors will return when field validation fails  */}
+                        {errors.textPrompt && (
+                            <span>This field is required</span>
+                        )}
+
+                        <input type="submit" />
+                    </form>
+                </Dialog.Panel>
             </Dialog>
         </Transition>
     )

@@ -208,7 +208,7 @@ const Camera = ({
                     />
                     <img
                         alt="generated image"
-                        src={getGenerateImage}
+                        src="/Users/syahrulanuar/code-projects/rest-in-peace-saw-2023/public/testImages/dblspace/00341-313640065-CHICKEN WINGS.png"
                         className="absolute left-[50%] top-[50%] z-10 h-full  -translate-y-[50%] -translate-x-[50%]  bg-transparent"
                     />
                 </div>

@@ -1,0 +1,13 @@
+@import 'base/reset';
+@import 'base/fonts';
+@import 'base/typos';
+html {
+  // background: $white;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+}

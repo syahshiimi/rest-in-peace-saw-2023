@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'SF';
+  font-display: swap;
+  src: local('SF Pro Display Medium'), local('SFProDisplay-Medium'),
+    url('~assets/fonts/sf-pro-display-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SF';
+  font-display: swap;
+  src: local('SF Pro Display Bold'), local('SFProDisplay-Bold'),
+    url('~assets/fonts/sf-pro-display-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MM';
+  font-display: swap;
+  src: local('Moderat Mono Medium'), local('Moderat-Mono-Medium'),
+    url('~assets/fonts/Moderat-Mono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AN';
+  font-display: swap;
+  src: local('Arial Narrow'), local('ArialNarrow'),
+    url('~assets/fonts/Arial_Narrow.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}

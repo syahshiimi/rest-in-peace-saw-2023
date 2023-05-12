@@ -1,0 +1,9 @@
+@function vw($width) {
+  @return 100 * $width / $realDesktopWidth * 1vw;
+}
+@function vwL($width) {
+  @return $width * $maxWidth/$realDesktopWidth * 1px;
+}
+@function vwS($width) {
+  @return 100 * $width / $realMobileWidth * 1vw;
+}
